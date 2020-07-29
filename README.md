@@ -2,7 +2,7 @@
 ## Juego de Cartas
 Integrantes
 - Alexander Trujillo
-- Paul de Belches
+- Paul Belches
 - Sebastián Arriola
 
 ### Juego Elegido: SushiGo
