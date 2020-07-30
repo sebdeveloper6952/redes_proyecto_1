@@ -27,6 +27,7 @@ class _SingleStringDialogState extends State<SingleStringDialog> {
     return WillPopScope(
       onWillPop: () async => false,
       child: SimpleDialog(
+        titlePadding: const EdgeInsets.all(0),
         contentPadding: const EdgeInsets.all(0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -34,8 +35,19 @@ class _SingleStringDialogState extends State<SingleStringDialog> {
           ),
         ),
         title: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10.0),
+              topRight: Radius.circular(10.0),
+            ),
+          ),
           child: Text(
             widget.title,
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
         ),
         children: <Widget>[
@@ -67,13 +79,6 @@ class _SingleStringDialogState extends State<SingleStringDialog> {
             ),
           ),
           Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(10.0),
-                bottomRight: Radius.circular(10.0),
-              ),
-            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -81,19 +86,12 @@ class _SingleStringDialogState extends State<SingleStringDialog> {
                   onPressed: () => Navigator.pop(context),
                   child: Text(
                     'CANCELAR',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black45,
-                    ),
                   ),
                 ),
                 FlatButton(
                   onPressed: () => _validateForm(context),
                   child: Text(
                     'UNIRSE',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
                   ),
                 ),
               ],
