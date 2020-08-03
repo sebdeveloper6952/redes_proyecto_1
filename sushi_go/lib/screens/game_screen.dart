@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushi_go/dummy_game_driver.dart';
+import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/game_manager.dart';
 import 'package:sushi_go/widgets/card_widget.dart';
 import 'package:badges/badges.dart';
@@ -25,17 +26,28 @@ class _GameScreenState extends State<GameScreen> {
               DummyGameDriver().simulateCardsReceived();
             },
           ),
-          IconButton(
-            icon: Badge(
-              badgeColor: Colors.white,
-              badgeContent: Text('1'),
-              child: Icon(Icons.chat_bubble_outline),
-            ),
-            onPressed: () {
-              // mostrar dialogo/widget de chat
-              showDialog(
-                context: context,
-                builder: (_) => ChatWidget(),
+          Consumer<ChatProvider>(
+            builder: (context, chatProvider, widget) {
+              final icon = chatProvider.pendingMessagesCount == 0
+                  ? Icon(Icons.chat_bubble_outline)
+                  : Badge(
+                      badgeColor: Colors.white,
+                      badgeContent: Text(
+                        chatProvider.pendingMessagesCount.toString(),
+                      ),
+                      child: Icon(Icons.chat_bubble_outline),
+                    );
+
+              return IconButton(
+                icon: icon,
+                onPressed: () {
+                  Provider.of<ChatProvider>(context, listen: false)
+                      .resetMessagesPendingCount();
+                  showDialog(
+                    context: context,
+                    builder: (_) => ChatWidget(),
+                  );
+                },
               );
             },
           )

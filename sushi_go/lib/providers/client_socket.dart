@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:convert';
 
 import 'package:sushi_go/models/sushi_go_card.dart';
+import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/game_manager.dart';
 
 class ClientSocket {
@@ -25,39 +26,46 @@ class ClientSocket {
 
   // singleton and constructor
   static final ClientSocket _instance = ClientSocket._internal();
+
   factory ClientSocket() {
     return _instance;
   }
-  ClientSocket._internal() {
-    print('Trying to connect to server...');
+
+  ClientSocket._internal();
+
+  void initialize() {
+    print('Client: trying to connect to server...');
     Socket.connect('127.0.0.1', 9876).then((socket) {
       /// Guardar referencia a socket.
       _socket = socket;
 
       print(
-          'Connected to: ${socket.remoteAddress.address}:${socket.remotePort}');
+          'Client: connected to: ${socket.remoteAddress.address}:${socket.remotePort}');
 
       /// definir callbacks para los eventos onData, onDone, onError.
       socket.listen(_socketOnData,
           onDone: _socketOnDone, onError: _socketOnError);
     }).catchError((Object error) {
-      print('Error connecting to server.');
+      print('Client: error connecting to server.');
     });
   }
+
+  /// TODO: implement
+  void _retryConnection() {}
 
   /// Todos los mensajes exitosos se reciben en este metodo.
   void _socketOnData(Uint8List data) {
     final String stringMessage = String.fromCharCodes(data).trim();
     final messageJsonMap = json.decode(stringMessage);
-    final ServerMessage clientMessage = ServerMessage.fromJson(messageJsonMap);
+    final ServerMessage serverMessage = ServerMessage.fromJson(messageJsonMap);
 
-    if (clientMessage.type == SERVER_LOGIN_RES) {
+    if (serverMessage.type == SERVER_LOGIN_RES) {
       // server login response
-    } else if (clientMessage.type == SERVER_CREATE_ROOM) {
+    } else if (serverMessage.type == SERVER_CREATE_ROOM) {
       // server create room response
-    } else if (clientMessage.type == SERVER_JOIN_ROOM) {
+    } else if (serverMessage.type == SERVER_JOIN_ROOM) {
       // server join room response
-    } else if (clientMessage.type == SERVER_CARDS_RESPONSE) {
+    } else if (serverMessage.type == SERVER_CARDS_RESPONSE) {
       // server cards response
       final List<int> cardIds = messageJsonMap['cards'];
 
@@ -66,10 +74,14 @@ class ClientSocket {
 
       // list of cards
       GameManager().setCards(cardIds);
-    } else if (clientMessage.type == SERVER_GAME_FINISH) {
+    } else if (serverMessage.type == SERVER_GAME_FINISH) {
       // server game finish response
-    } else if (clientMessage.type == CLIENT_RECV_CHAT_MESSAGE) {
+    } else if (serverMessage.type == CLIENT_RECV_CHAT_MESSAGE) {
       // client received chat message
+      final message = messageJsonMap['message'] ?? '';
+      final user_id = messageJsonMap['user_id'] ?? -1;
+      final username = messageJsonMap['username'] ?? '';
+      ChatProvider().messageReceived(user_id, username, message);
     }
   }
 
@@ -80,10 +92,10 @@ class ClientSocket {
 
   void _socketOnError(Object error) {}
 
-  void writeToSocket(int messageType, ClientMessage message) {
+  void writeToSocket(ClientMessage message) {
     final Map<String, dynamic> jsonMessage = message.toJson();
     final String stringMessage = json.encode(jsonMessage);
-    _socket.write(stringMessage);
+    _socket?.write(stringMessage);
   }
 }
 
