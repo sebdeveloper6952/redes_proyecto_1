@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sushi_go/providers/chat_provider.dart';
+import 'package:sushi_go/providers/client_socket.dart';
 import 'package:sushi_go/providers/user_provider.dart';
 
 class ChatWidget extends StatefulWidget {
@@ -10,6 +12,15 @@ class ChatWidget extends StatefulWidget {
 }
 
 class _ChatWidgetState extends State<ChatWidget> {
+  final _textFieldController = TextEditingController();
+  String _message;
+
+  void _sendMessage() async {
+    if (_message == null) return;
+    Provider.of<ChatProvider>(context, listen: false).sendMessage(_message);
+    _textFieldController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -42,25 +53,18 @@ class _ChatWidgetState extends State<ChatWidget> {
           ),
         ),
         children: [
-          Container(
-            height: size.height / 1.5,
-            width: size.width / 2,
-            child: ListView(
-              children: [
-                ChatMessage(
-                  user: 'PaulBelches',
-                  message: 'Me escupen las putas!',
+          Consumer<ChatProvider>(
+            builder: (context, chatProvider, widget) {
+              return Container(
+                height: size.height / 1.5,
+                width: size.width / 2,
+                child: ListView(
+                  children: chatProvider.messages
+                      .map((m) => ChatMessage(message: m))
+                      .toList(),
                 ),
-                ChatMessage(
-                  user: 'AxelTrujillo',
-                  message: 'AJAJAJAJAJA',
-                ),
-                ChatMessage(
-                  user: 'Sebas',
-                  message: 'Ola!!!',
-                ),
-              ],
-            ),
+              );
+            },
           ),
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -71,7 +75,12 @@ class _ChatWidgetState extends State<ChatWidget> {
                     bottom: 8,
                     left: 16,
                   ),
-                  child: TextField(),
+                  child: TextField(
+                    controller: _textFieldController,
+                    onChanged: (val) {
+                      _message = val;
+                    },
+                  ),
                 ),
               ),
               Container(
@@ -85,7 +94,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     color: Theme.of(context).primaryColor,
                     size: 35,
                   ),
-                  onPressed: () {},
+                  onPressed: () => _sendMessage(),
                 ),
               ),
             ],
@@ -97,21 +106,20 @@ class _ChatWidgetState extends State<ChatWidget> {
 }
 
 class ChatMessage extends StatelessWidget {
-  final String user;
-  final String message;
+  final ChatMessageModel message;
 
   ChatMessage({
-    this.user,
     this.message,
   });
 
   @override
   Widget build(BuildContext context) {
-    final username = Provider.of<UserProvider>(context).username;
+    final username = Provider.of<UserProvider>(context, listen: false).username;
 
     return Align(
-      alignment:
-          user == username ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: message.username == username
+          ? Alignment.centerRight
+          : Alignment.centerLeft,
       child: Container(
         width: MediaQuery.of(context).size.width / 3,
         margin: const EdgeInsets.symmetric(
@@ -120,7 +128,8 @@ class ChatMessage extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: user == username ? Colors.red[300] : Colors.blue[300],
+          color:
+              message.username == username ? Colors.red[300] : Colors.blue[300],
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
@@ -130,13 +139,13 @@ class ChatMessage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              user,
+              message.username,
               style: TextStyle(
                 fontSize: 12,
               ),
             ),
             Text(
-              message,
+              message.message,
               style: TextStyle(
                 color: Colors.white,
               ),
