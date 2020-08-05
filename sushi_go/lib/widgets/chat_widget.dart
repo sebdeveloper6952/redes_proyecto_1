@@ -45,11 +45,29 @@ class _ChatWidgetState extends State<ChatWidget> {
               topRight: Radius.circular(10.0),
             ),
           ),
-          child: Text(
-            'Chat',
-            style: TextStyle(
-              color: Colors.white,
-            ),
+          child: Row(
+            children: [
+              Text(
+                'Chat',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         children: [
@@ -76,10 +94,12 @@ class _ChatWidgetState extends State<ChatWidget> {
                     left: 16,
                   ),
                   child: TextField(
+                    textInputAction: TextInputAction.go,
                     controller: _textFieldController,
                     onChanged: (val) {
                       _message = val;
                     },
+                    onSubmitted: (val) => _sendMessage(),
                   ),
                 ),
               ),

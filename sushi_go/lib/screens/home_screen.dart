@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sushi_go/dummy_game_driver.dart';
+import 'package:sushi_go/providers/lobby_provider.dart';
 import 'package:sushi_go/providers/user_provider.dart';
 import 'package:sushi_go/router.dart';
+import 'package:sushi_go/screens/game_screen.dart';
 import 'package:sushi_go/widgets/single_string_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,13 +13,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  UserProvider _userProvider;
+  LobbyProvider _lobbyProvider;
   String _username;
+  bool _loading = false;
 
   void _createRoom() async {
     print('Create room');
 
+    // TODO: remove
+    DummyGameDriver().createRoom();
+    // _lobbyProvider.createRoom();
+
     // Ejemplo de como navegar.
-    FluroRouter.router.navigateTo(context, '/game');
+    // FluroRouter.router.navigateTo(context, '/game');
   }
 
   void _joinRoom() async {
@@ -27,13 +37,30 @@ class _HomeScreenState extends State<HomeScreen> {
         content: 'Ingresa el ID del cuarto.',
       ),
     );
+    if (roomId == null) return;
+
+    // TODO: remove
+    DummyGameDriver().joinRoom(int.parse(roomId));
+    // _lobbyProvider.joinRoom(roomId);
+
     print('Join room $roomId');
   }
 
   void _submitUsername() {
     if (_username == null || _username.length < 4) return;
-    Provider.of<UserProvider>(context, listen: false).setUsername(_username);
-    setState(() {});
+    _userProvider.setUsername(_username);
+    // TODO: remove
+    DummyGameDriver().login(_username);
+    setState(() {
+      _loading = true;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _userProvider = Provider.of<UserProvider>(context, listen: false);
+    _lobbyProvider = Provider.of<LobbyProvider>(context, listen: false);
   }
 
   @override
@@ -63,13 +90,19 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 48,
             width: size.width / 2,
             child: RaisedButton(
-              child: Text(
-                'INGRESAR',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () => _submitUsername(),
+              child: _loading
+                  ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.red,
+                      ),
+                    )
+                  : Text(
+                      'INGRESAR',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+              onPressed: _loading ? null : () => _submitUsername(),
             ),
           ),
         ],
@@ -108,13 +141,22 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    return Scaffold(
+    final lobbyWidget = Scaffold(
       appBar: AppBar(
         title: Text('Lobby'),
       ),
       body: Center(
-        child: _username == null ? _usernameWidget : _lobbyWidget,
+        child: _userProvider.userId == null ? _usernameWidget : _lobbyWidget,
       ),
+    );
+
+    return Consumer<LobbyProvider>(
+      builder: (c, lobbyProvider, w) {
+        if (lobbyProvider.joinedRoom) {
+          return GameScreen();
+        }
+        return lobbyWidget;
+      },
     );
   }
 }

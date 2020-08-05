@@ -32,4 +32,11 @@ class GameManager extends ChangeNotifier {
     for (int id in cardIds) _cards.add(_cardsMap[id]);
     notifyListeners();
   }
+
+  void chooseCardsForTurn(List<int> cardIds) {}
+
+  void setWinners(List<dynamic> winners) {
+    winners.forEach((i) {});
+    notifyListeners();
+  }
 }

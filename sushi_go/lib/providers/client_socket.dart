@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
-
-import 'package:sushi_go/models/sushi_go_card.dart';
 import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/game_manager.dart';
+import 'package:sushi_go/providers/user_provider.dart';
 
 class ClientSocket {
   static const int CLIENT_LOGIN = 101;
@@ -61,27 +60,32 @@ class ClientSocket {
 
     if (serverMessage.type == SERVER_LOGIN_RES) {
       // server login response
+      final userId = messageJsonMap['id'] ?? -1;
+      UserProvider().setUserId(userId);
     } else if (serverMessage.type == SERVER_CREATE_ROOM) {
       // server create room response
+      final roomId = messageJsonMap['id'] ?? -1;
     } else if (serverMessage.type == SERVER_JOIN_ROOM) {
       // server join room response
+      final status = messageJsonMap['status'] ?? false;
     } else if (serverMessage.type == SERVER_CARDS_RESPONSE) {
       // server cards response
-      final List<int> cardIds = messageJsonMap['cards'];
-
+      final List<int> cardIds = messageJsonMap['cards'] ?? [];
       // check for error
       if (cardIds == null) {}
-
-      // list of cards
+      // let game manager know of the new cards
       GameManager().setCards(cardIds);
     } else if (serverMessage.type == SERVER_GAME_FINISH) {
       // server game finish response
+      final List<dynamic> gameStatus = messageJsonMap['status'] ?? [];
+      // let game manager know of winners and scores
+      GameManager().setWinners(gameStatus);
     } else if (serverMessage.type == CLIENT_RECV_CHAT_MESSAGE) {
       // client received chat message
       final message = messageJsonMap['message'] ?? '';
-      final user_id = messageJsonMap['user_id'] ?? -1;
+      final userId = messageJsonMap['user_id'] ?? -1;
       final username = messageJsonMap['username'] ?? '';
-      ChatProvider().messageReceived(user_id, username, message);
+      ChatProvider().messageReceived(userId, username, message);
     }
   }
 

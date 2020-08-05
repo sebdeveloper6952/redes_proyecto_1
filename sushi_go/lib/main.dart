@@ -4,6 +4,7 @@ import 'package:sushi_go/dummy_game_driver.dart';
 import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/client_socket.dart';
 import 'package:sushi_go/providers/game_manager.dart';
+import 'package:sushi_go/providers/lobby_provider.dart';
 import 'package:sushi_go/providers/user_provider.dart';
 import 'package:sushi_go/router.dart';
 
@@ -26,8 +27,11 @@ void main() {
           create: (_) => ChatProvider(),
           lazy: false,
         ),
-        Provider<UserProvider>(
+        ChangeNotifierProvider<UserProvider>(
           create: (_) => UserProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => LobbyProvider(),
         ),
         Provider<ClientSocket>(
           create: (_) => ClientSocket(),
