@@ -18,6 +18,7 @@ class ClientSocket {
   static const int CLIENT_CARDS_REQUEST = 110;
   static const int SERVER_CARDS_RESPONSE = 111;
   static const int CLIENT_SEND_CARD = 112;
+  static const int SERVER_CARDS_RECEIVED = 113;
   static const int SERVER_GAME_FINISH = 114;
   static const int CLIENT_SEND_CHAT_MESSAGE = 200;
   static const int CLIENT_RECV_CHAT_MESSAGE = 201;
@@ -59,29 +60,31 @@ class ClientSocket {
     final ServerMessage serverMessage = ServerMessage.fromJson(messageJsonMap);
 
     if (serverMessage.type == SERVER_LOGIN_RES) {
-      // server login response
+      // userId indica si login fue exitoso
       final userId = messageJsonMap['id'] ?? -1;
       UserProvider().setUserId(userId);
     } else if (serverMessage.type == SERVER_CREATE_ROOM) {
-      // server create room response
+      // roomId indica si fue posible crear un cuarto
       final roomId = messageJsonMap['id'] ?? -1;
     } else if (serverMessage.type == SERVER_JOIN_ROOM) {
-      // server join room response
+      // status indica el jugador se pudo unir al cuarto
       final status = messageJsonMap['status'] ?? false;
     } else if (serverMessage.type == SERVER_CARDS_RESPONSE) {
-      // server cards response
       final List<int> cardIds = messageJsonMap['cards'] ?? [];
-      // check for error
+      // algun error jeje
       if (cardIds == null) {}
-      // let game manager know of the new cards
+      // notificar a game manager que se recibieron nuevas cartas
       GameManager().setCards(cardIds);
+    } else if (serverMessage.type == SERVER_CARDS_RECEIVED) {
+      /// notificar a game manager de que cartas fueron recibidas.
+      GameManager().notifyServerReceivedCards();
     } else if (serverMessage.type == SERVER_GAME_FINISH) {
-      // server game finish response
+      // server responde que juego ha terminado
       final List<dynamic> gameStatus = messageJsonMap['status'] ?? [];
-      // let game manager know of winners and scores
+      // notificar a game manager de los puntajes
       GameManager().setWinners(gameStatus);
     } else if (serverMessage.type == CLIENT_RECV_CHAT_MESSAGE) {
-      // client received chat message
+      // mensaje de chat recibido
       final message = messageJsonMap['message'] ?? '';
       final userId = messageJsonMap['user_id'] ?? -1;
       final username = messageJsonMap['username'] ?? '';

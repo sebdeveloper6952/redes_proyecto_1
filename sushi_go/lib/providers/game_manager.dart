@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sushi_go/models/sushi_go_card.dart';
 
+import 'client_socket.dart';
+
 class GameManager extends ChangeNotifier {
+  /// singleton
+  static final GameManager _instance = GameManager._internal();
   final _cardsMap = {
     1: SushiGoCard(id: 1, name: 'Sashimi'),
     2: SushiGoCard(id: 2, name: 'Chopsticks'),
@@ -17,15 +21,16 @@ class GameManager extends ChangeNotifier {
     12: SushiGoCard(id: 12, name: 'Squid Nigiri')
   };
 
-  // singleton
-  static final GameManager _instance = GameManager._internal();
+  List<SushiGoCard> _cards = [];
+  List<SushiGoCard> get cards => List.unmodifiable(_cards);
+  int _currentTurn = 1;
+  bool _cardReceived = false;
+
+  /// constructores
   factory GameManager() {
     return _instance;
   }
   GameManager._internal();
-
-  List<SushiGoCard> _cards = [];
-  List<SushiGoCard> get cards => List.unmodifiable(_cards);
 
   void setCards(List<int> cardIds) {
     _cards.clear();
@@ -33,10 +38,35 @@ class GameManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  void chooseCardsForTurn(List<int> cardIds) {}
+  /// Envia cardIds al servidor para dejarle saber que esas fueron
+  /// las cartas escogidas para este turno.
+  void chooseCardsForTurn(List<int> cardIds) {
+    _cardReceived = false;
+    ClientSocket().writeToSocket(SendCardsMessage(cards: cardIds));
+    notifyListeners();
+  }
+
+  void notifyServerReceivedCards() {
+    _cardReceived = true;
+    notifyListeners();
+  }
 
   void setWinners(List<dynamic> winners) {
     winners.forEach((i) {});
     notifyListeners();
+  }
+}
+
+class SendCardsMessage extends ClientMessage {
+  final List<int> cards;
+
+  SendCardsMessage({this.cards}) : super(type: ClientSocket.CLIENT_SEND_CARD);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'cards': cards,
+    };
   }
 }
