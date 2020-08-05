@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sushi_go/models/sushi_go_card.dart';
-
 import 'client_socket.dart';
 
 class GameManager extends ChangeNotifier {
@@ -24,7 +23,8 @@ class GameManager extends ChangeNotifier {
   List<SushiGoCard> _cards = [];
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
   int _currentTurn = 1;
-  bool _cardReceived = false;
+  bool _waitingForNextTurn = false;
+  bool get waitingForNextTurn => _waitingForNextTurn;
 
   /// constructores
   factory GameManager() {
@@ -35,21 +35,19 @@ class GameManager extends ChangeNotifier {
   void setCards(List<int> cardIds) {
     _cards.clear();
     for (int id in cardIds) _cards.add(_cardsMap[id]);
+    _waitingForNextTurn = false;
     notifyListeners();
   }
 
   /// Envia cardIds al servidor para dejarle saber que esas fueron
   /// las cartas escogidas para este turno.
   void chooseCardsForTurn(List<int> cardIds) {
-    _cardReceived = false;
+    _waitingForNextTurn = true;
     ClientSocket().writeToSocket(SendCardsMessage(cards: cardIds));
     notifyListeners();
   }
 
-  void notifyServerReceivedCards() {
-    _cardReceived = true;
-    notifyListeners();
-  }
+  void notifyServerReceivedCards() {}
 
   void setWinners(List<dynamic> winners) {
     winners.forEach((i) {});

@@ -55,4 +55,11 @@ class DummyGameDriver {
   void joinRoom(int roomId) {
     LobbyProvider().setJoinedRoom(roomId);
   }
+
+  void sendCards(List<int> cardIds) {
+    GameManager().chooseCardsForTurn(cardIds);
+    Future.delayed(Duration(seconds: 2), () {
+      simulateCardsReceived();
+    });
+  }
 }
