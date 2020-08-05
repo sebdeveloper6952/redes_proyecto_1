@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/client_socket.dart';
@@ -12,13 +13,17 @@ class ChatWidget extends StatefulWidget {
 }
 
 class _ChatWidgetState extends State<ChatWidget> {
+  final _scrollController = ScrollController();
   final _textFieldController = TextEditingController();
   String _message;
 
   void _sendMessage() async {
     if (_message == null) return;
-    Provider.of<ChatProvider>(context, listen: false).sendMessage(_message);
-    _textFieldController.clear();
+    context.read<ChatProvider>().sendMessage(_message);
+    setState(() {
+      _message = null;
+      _textFieldController.clear();
+    });
   }
 
   @override
@@ -73,10 +78,20 @@ class _ChatWidgetState extends State<ChatWidget> {
         children: [
           Consumer<ChatProvider>(
             builder: (context, chatProvider, widget) {
+              /// okay, raro pero nimodo
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                _scrollController.animateTo(
+                  _scrollController.position.maxScrollExtent,
+                  duration: const Duration(milliseconds: 50),
+                  curve: Curves.easeIn,
+                );
+              });
+
               return Container(
                 height: size.height / 1.5,
                 width: size.width / 2,
                 child: ListView(
+                  controller: _scrollController,
                   children: chatProvider.messages
                       .map((m) => ChatMessage(message: m))
                       .toList(),
