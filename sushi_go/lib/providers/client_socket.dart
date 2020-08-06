@@ -35,7 +35,7 @@ class ClientSocket {
 
   void initialize() {
     print('Client: trying to connect to server...');
-    Socket.connect('127.0.0.1', 9876).then((socket) {
+    Socket.connect('127.0.0.1', 65432).then((socket) {
       /// Guardar referencia a socket.
       _socket = socket;
 
@@ -55,7 +55,11 @@ class ClientSocket {
 
   /// Todos los mensajes exitosos se reciben en este metodo.
   void _socketOnData(Uint8List data) {
-    final String stringMessage = String.fromCharCodes(data).trim();
+    final String stringMessage =
+        String.fromCharCodes(data).replaceAll('\'', '"').trim();
+
+    /// TODO: remove
+    print('Received: $stringMessage');
     final messageJsonMap = json.decode(stringMessage);
     final ServerMessage serverMessage = ServerMessage.fromJson(messageJsonMap);
 
