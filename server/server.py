@@ -1,26 +1,42 @@
 
 import selectors
 import socket
+import types
+import json
 
-HOST = '127.0.0.1'  # localhost
+HOST = '127.0.0.1'  # localHOST
 PORT = 65432        # Puerto
 
-sel = selectors.DefaultSelector() #Crear el multiplexor por defecto
+def process_message(message): 
+    obj = json.loads(message)
+    response =	{
+        "type": 0
+    }
+    if (obj["type"] == 101):
+        response["type"] = 102
+        response["id"] = 1234
+    elif (obj["type"] == 104):
+        response["type"] = 105
+        response["id"] = 1234
+    elif (obj["type"] == 106):
+        response["type"] = 107
+        response["status"] = True
+    elif (obj["type"] == 108):
+        response["type"] = 109
+        response["status"] = True
+    elif (obj["type"] == 110):
+        response["type"] = 111
+        response["cards"] = [1,1,1,1,1,1,1,1,]
+    elif (obj["type"] == 112):
+        response["type"] = 113
+    elif (obj["type"] == 200):
+        response["type"] = 201
+        response["message"] = "Hola putos!"
+        response["User_id"] = 1
+        response["Username"] = "paulb"
 
-lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Crear socket IPV4, TCP
-lsock.bind((host, port)) #Amarrar la ip al puerto
-lsock.listen() # Cantidad de conexiones por defecto
-print('listening on', (host, port))
-lsock.setblocking(False) #Eliminar llamadas bloqueadoras
-sel.register(lsock, selectors.EVENT_READ, data=None) #Monitorear el socket, y registra 
+    return (response)
 
-while True:
-    events = sel.select(timeout=None) # Esperar hasta que se registre un objeto
-    for key, mask in events: #Para todos los eventos que se leyeron
-        if key.data is None: # Si aun no hemos registrado el cliente
-            accept_wrapper(key.fileobj) # Registrar
-        else:
-            service_connection(key, mask) #Procesar solicitud
 
 def accept_wrapper(sock):
     conn, addr = sock.accept()  # Aceptar la conexion
@@ -35,7 +51,7 @@ def service_connection(key, mask):
     data = key.data #Que objeto mando
     if mask & selectors.EVENT_READ: # Si logramos leer algo
         recv_data = sock.recv(1024)  # Should be ready to read
-        if recv_data: #Si leemos algo
+        if recv_data: #Si leemos algo´
             data.outb += recv_data
         else: #el cliente cerro su sokcet
             print('closing connection to', data.addr)
@@ -43,6 +59,25 @@ def service_connection(key, mask):
             sock.close()
     if mask & selectors.EVENT_WRITE: #El socket esta listo para escribir
         if data.outb:
-            print('echoing', repr(data.outb), 'to', data.addr)
-            sent = sock.send(data.outb)  # Should be ready to write
+            message = data.outb
+            response = process_message(message.decode("utf-8"))
+            print('echoing', repr(response), 'to', data.addr)
+            sent = sock.send(repr(response).encode("utf-8"))  # Should be ready to write
             data.outb = data.outb[sent:]
+
+sel = selectors.DefaultSelector() #Crear el multiplexor por defecto
+
+lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Crear socket IPV4, TCP
+lsock.bind((HOST, PORT)) #Amarrar la ip al puerto
+lsock.listen() # Cantidad de conexiones por defecto
+print('listening on', (HOST, PORT))
+lsock.setblocking(False) #Eliminar llamadas bloqueadoras
+sel.register(lsock, selectors.EVENT_READ, data=None) #Monitorear el socket, y registra 
+
+while True:
+    events = sel.select(timeout=None) # Esperar hasta que se registre un objeto
+    for key, mask in events: #Para todos los eventos que se leyeron
+        if key.data is None: # Si aun no hemos registrado el cliente
+            accept_wrapper(key.fileobj) # Registrar
+        else:
+            service_connection(key, mask) #Procesar solicitud
