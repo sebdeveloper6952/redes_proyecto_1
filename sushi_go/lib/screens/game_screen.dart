@@ -41,6 +41,7 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Cuarto: 123'),
         actions: [
           IconButton(
             icon: Icon(Icons.autorenew),

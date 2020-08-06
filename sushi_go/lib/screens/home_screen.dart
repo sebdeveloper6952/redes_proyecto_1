@@ -114,6 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
+            margin: const EdgeInsets.symmetric(
+              vertical: 8.0,
+            ),
             width: 200,
             child: RaisedButton(
               onPressed: () => _createRoom(),

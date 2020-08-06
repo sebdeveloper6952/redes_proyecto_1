@@ -56,6 +56,12 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.red,
         accentColor: Colors.blue,
         buttonTheme: ButtonThemeData(
+          height: 48,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10.0),
+            ),
+          ),
           buttonColor: Colors.red,
         ),
         inputDecorationTheme: InputDecorationTheme(
