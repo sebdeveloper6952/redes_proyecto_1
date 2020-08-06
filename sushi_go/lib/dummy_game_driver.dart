@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/game_manager.dart';
+import 'package:sushi_go/providers/lobby_provider.dart';
+import 'package:sushi_go/providers/user_provider.dart';
 
 class DummyGameDriver {
   static final DummyGameDriver _instance = DummyGameDriver._internal();
@@ -39,5 +41,25 @@ class DummyGameDriver {
       ids.add(random.nextInt(12) + 1);
 
     GameManager().setCards(ids);
+  }
+
+  void login(String username) {
+    UserProvider().setUsername(username);
+    UserProvider().setUserId(1);
+  }
+
+  void createRoom() {
+    LobbyProvider().setJoinedRoom(1);
+  }
+
+  void joinRoom(int roomId) {
+    LobbyProvider().setJoinedRoom(roomId);
+  }
+
+  void sendCards(List<int> cardIds) {
+    GameManager().chooseCardsForTurn(cardIds);
+    Future.delayed(Duration(seconds: 2), () {
+      simulateCardsReceived();
+    });
   }
 }

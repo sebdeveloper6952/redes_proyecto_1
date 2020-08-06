@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:sushi_go/providers/client_socket.dart';
 
-class UserProvider {
+class UserProvider extends ChangeNotifier {
   static final UserProvider _instance = UserProvider._internal();
+  int _userId;
   String _username;
+  int get userId => _userId;
   String get username => _username;
 
   UserProvider._internal();
@@ -14,6 +17,11 @@ class UserProvider {
     _username = username;
     final clientMessage = LoginMessage(username: _username);
     ClientSocket().writeToSocket(clientMessage);
+  }
+
+  void setUserId(int userId) {
+    _userId = userId;
+    notifyListeners();
   }
 }
 
@@ -28,4 +36,10 @@ class LoginMessage extends ClientMessage {
       "username": username,
     };
   }
+}
+
+class LoginResponse extends ServerMessage {
+  final int id;
+
+  LoginResponse({this.id}) : super(type: ClientSocket.SERVER_LOGIN_RES);
 }

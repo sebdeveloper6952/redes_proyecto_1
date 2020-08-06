@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushi_go/dummy_game_driver.dart';
+import 'package:sushi_go/models/sushi_go_card.dart';
 import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/game_manager.dart';
 import 'package:sushi_go/widgets/card_widget.dart';
 import 'package:badges/badges.dart';
 import 'package:sushi_go/widgets/chat_widget.dart';
+import 'package:sushi_go/widgets/loading_card.dart';
 
 class GameScreen extends StatefulWidget {
   GameScreen({Key key}) : super(key: key);
@@ -15,16 +17,35 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+  ChatProvider _chatProvider;
+  final List<int> _selectedCards = [0];
+
+  /// Funcion ejecutada al hacer click en cada carta.
+  /// Puede cambiar.
+  void _onCardClick(SushiGoCard card) {
+    _selectedCards.replaceRange(0, 1, [card.id]);
+  }
+
+  /// enviar carta(s) seleccionada(s) a servidor
+  void _sendCards() {
+    DummyGameDriver().sendCards(_selectedCards);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _chatProvider = context.read<ChatProvider>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Cuarto: 123'),
         actions: [
           IconButton(
             icon: Icon(Icons.autorenew),
-            onPressed: () {
-              DummyGameDriver().simulateCardsReceived();
-            },
+            onPressed: () => _sendCards(),
           ),
           Consumer<ChatProvider>(
             builder: (context, chatProvider, widget) {
@@ -41,8 +62,7 @@ class _GameScreenState extends State<GameScreen> {
               return IconButton(
                 icon: icon,
                 onPressed: () {
-                  Provider.of<ChatProvider>(context, listen: false)
-                      .resetMessagesPendingCount();
+                  _chatProvider.resetMessagesPendingCount();
                   showDialog(
                     context: context,
                     builder: (_) => ChatWidget(),
@@ -55,12 +75,26 @@ class _GameScreenState extends State<GameScreen> {
       ),
       body: Consumer<GameManager>(
         builder: (context, gameManager, child) {
-          return ListView(
-            children: gameManager.cards
-                .map(
-                  (c) => CardWidget(card: c),
+          final loadingWidget = gameManager.waitingForNextTurn
+              ? LoadingDialog(
+                  title: 'Esperando a los demás...',
                 )
-                .toList(),
+              : Container();
+
+          return Stack(
+            children: [
+              ListView(
+                children: gameManager.cards
+                    .map(
+                      (c) => CardWidget(
+                        card: c,
+                        onClick: () => _onCardClick(c),
+                      ),
+                    )
+                    .toList(),
+              ),
+              loadingWidget,
+            ],
           );
         },
       ),

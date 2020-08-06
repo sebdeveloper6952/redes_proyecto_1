@@ -31,7 +31,7 @@ class ChatProvider extends ChangeNotifier {
     );
   }
 
-  /// Adds the message to the list of messages and notifies listeners.
+  /// Agrega mensaje a lista de mensajes recibidos y notifica a observadores.
   void messageReceived(int userId, String username, String message) {
     _messages.add(
       ChatMessageModel(

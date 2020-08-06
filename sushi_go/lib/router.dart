@@ -14,7 +14,7 @@ class FluroRouter {
     handlerFunc: (BuildContext c, Map<String, dynamic> p) => GameScreen(),
   );
 
-  /// defines application routes and route handlers
+  /// rutas de la aplicacion y handler para cada ruta
   static void initialize() {
     router.define(
       '/',
