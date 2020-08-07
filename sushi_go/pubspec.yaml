@@ -59,6 +59,7 @@ flutter:
     - assets/img/squid_nigiri.png
     - assets/img/tempura.png
     - assets/img/wasabi.png
+    - assets/img/background1.png
   
   # fonts:
   #   - family: Schyler

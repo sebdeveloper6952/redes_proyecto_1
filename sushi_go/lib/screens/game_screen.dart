@@ -79,7 +79,14 @@ class _GameScreenState extends State<GameScreen> {
               ? LoadingDialog(
                   title: 'Esperando a los demás...',
                 )
-              : Container();
+              : Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/img/background1.png"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+              );
 
           return Stack(
             children: [
@@ -92,7 +99,7 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                     )
                     .toList(),
-              ),
+              ), 
               loadingWidget,
             ],
           );

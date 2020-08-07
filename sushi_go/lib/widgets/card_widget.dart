@@ -16,6 +16,7 @@ class CardWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () => onClick(),
       child: Card(
+        color: Colors.redAccent,
         child: Center(
           child: Text(
             card.name,
