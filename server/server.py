@@ -7,35 +7,61 @@ import json
 HOST = '127.0.0.1'  # localHOST
 PORT = 65432        # Puerto
 
+rooms = {}
+users = {}
+
 def process_message(message): 
+    print("Entramos", message)
     obj = json.loads(message)
     response =	{
         "type": 0
     }
     if (obj["type"] == 101):
+        #Generate user id
+        userId = len(users)
+        #Add user to list
+        users[userId] =  { #id
+            "ip": "1921231.23123", #ip
+            "username": obj["username"] #usuario
+        }
+        #Build response
         response["type"] = 102
-        response["id"] = 1234
+        response["id"] = userId
     elif (obj["type"] == 104):
+        #Generate room id
+        roomsId = len(rooms)
+        #Add room to list
+        rooms[roomsId] =  { # de sala
+            "players": [], #players jugando en una sala,
+            "turn": 0,
+            "masos": [],
+            "selectedCards": []
+        }
+        #Build response
         response["type"] = 105
-        response["id"] = 1234
+        response["id"] = roomsId
     elif (obj["type"] == 106):
+        #Hacer el add del usuario a la lista
         response["type"] = 107
         response["status"] = True
     elif (obj["type"] == 108):
+        #Bandera?
         response["type"] = 109
         response["status"] = True
     elif (obj["type"] == 110):
+        #Mandar mazo
         response["type"] = 111
         response["cards"] = [1,1,1,1,1,1,1,1,]
     elif (obj["type"] == 112):
+        #Remover
         response["type"] = 113
     elif (obj["type"] == 200):
         response["type"] = 201
         response["message"] = "Hola putos!"
         response["User_id"] = 1
         response["Username"] = "paulb"
-
-    return (response)
+    return response
+    
 
 
 def accept_wrapper(sock):
@@ -60,10 +86,13 @@ def service_connection(key, mask):
     if mask & selectors.EVENT_WRITE: #El socket esta listo para escribir
         if data.outb:
             message = data.outb
+            print("recibi", message.decode("utf-8"), type(message.decode("utf-8")) )
             response = process_message(message.decode("utf-8"))
-            print('echoing', repr(response), 'to', data.addr)
+            #print('echoing', repr(response), 'to', data.addr)
             sent = sock.send(repr(response).encode("utf-8"))  # Should be ready to write
-            data.outb = data.outb[sent:]
+            #sent = sock.send(b"recibi")
+            data.outb = data.outb[len(message):]
+###########################################################################################
 
 sel = selectors.DefaultSelector() #Crear el multiplexor por defecto
 
