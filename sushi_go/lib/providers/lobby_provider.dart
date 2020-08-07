@@ -3,13 +3,21 @@ import 'package:sushi_go/providers/client_socket.dart';
 
 class LobbyProvider extends ChangeNotifier {
   static final LobbyProvider _instance = LobbyProvider._internal();
-  bool joinedRoom = false;
+  bool _loggedIn = false;
+  bool _joinedRoom = false;
   int _roomId = -1;
+  bool get loggedIn => _loggedIn;
+  bool get joinedRoom => _joinedRoom;
   int get roomId => _roomId;
 
   LobbyProvider._internal();
   factory LobbyProvider() {
     return _instance;
+  }
+
+  void setLoggedIn() {
+    _loggedIn = true;
+    notifyListeners();
   }
 
   void createRoom() {
@@ -22,13 +30,13 @@ class LobbyProvider extends ChangeNotifier {
 
   void setJoinedRoom(int roomId) {
     _roomId = roomId;
-    joinedRoom = _roomId > 0 ? true : false;
+    _joinedRoom = _roomId > 0 ? true : false;
     notifyListeners();
   }
 }
 
 class CreateRoomMessage extends ClientMessage {
-  final int type = ClientSocket.SERVER_CREATE_ROOM;
+  final int type = ClientSocket.CLIENT_CREATE_ROOM;
 
   @override
   Map<String, dynamic> toJson() {

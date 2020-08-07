@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/game_manager.dart';
+import 'package:sushi_go/providers/lobby_provider.dart';
 import 'package:sushi_go/providers/user_provider.dart';
 
 class ClientSocket {
@@ -67,9 +68,11 @@ class ClientSocket {
       // userId indica si login fue exitoso
       final userId = messageJsonMap['id'] ?? -1;
       UserProvider().setUserId(userId);
+      LobbyProvider().setLoggedIn();
     } else if (serverMessage.type == SERVER_CREATE_ROOM) {
       // roomId indica si fue posible crear un cuarto
       final roomId = messageJsonMap['id'] ?? -1;
+      LobbyProvider().setJoinedRoom(roomId);
     } else if (serverMessage.type == SERVER_JOIN_ROOM) {
       // status indica el jugador se pudo unir al cuarto
       final status = messageJsonMap['status'] ?? false;
@@ -104,6 +107,7 @@ class ClientSocket {
   void _socketOnError(Object error) {}
 
   void writeToSocket(ClientMessage message) {
+    print('writing to socket message type: ${message.type}');
     final Map<String, dynamic> jsonMessage = message.toJson();
     final String stringMessage = json.encode(jsonMessage);
     _socket?.write(stringMessage);

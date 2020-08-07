@@ -28,7 +28,8 @@ class _GameScreenState extends State<GameScreen> {
 
   /// enviar carta(s) seleccionada(s) a servidor
   void _sendCards() {
-    DummyGameDriver().sendCards(_selectedCards);
+    /// TODO: remove
+    // DummyGameDriver().sendCards(_selectedCards);
   }
 
   @override
@@ -86,7 +87,7 @@ class _GameScreenState extends State<GameScreen> {
                       fit: BoxFit.cover,
                     ),
                   ),
-              );
+                );
 
           return Stack(
             children: [
@@ -99,7 +100,7 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                     )
                     .toList(),
-              ), 
+              ),
               loadingWidget,
             ],
           );

@@ -15,8 +15,7 @@ class UserProvider extends ChangeNotifier {
 
   void setUsername(String username) {
     _username = username;
-    final clientMessage = LoginMessage(username: _username);
-    ClientSocket().writeToSocket(clientMessage);
+    ClientSocket().writeToSocket(LoginMessage(username: _username));
   }
 
   void setUserId(int userId) {
