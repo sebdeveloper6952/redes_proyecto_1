@@ -8,6 +8,7 @@ import 'package:sushi_go/widgets/card_widget.dart';
 import 'package:badges/badges.dart';
 import 'package:sushi_go/widgets/chat_widget.dart';
 import 'package:sushi_go/widgets/loading_card.dart';
+import 'package:sushi_go/widgets/lobby_player_widget.dart';
 
 class GameScreen extends StatefulWidget {
   GameScreen({Key key}) : super(key: key);
@@ -71,10 +72,9 @@ class _GameScreenState extends State<GameScreen> {
             children: [
               Expanded(
                 child: ListView(
-                  children: [
-                    Text('1 - paul'),
-                    Text('2 - sebas'),
-                  ],
+                  children: lobby.players
+                      .map((p) => LobbyPlayerWidget(player: p))
+                      .toList(),
                 ),
               ),
               startGameBtn,

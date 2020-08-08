@@ -6,7 +6,12 @@ import 'package:sushi_go/providers/user_provider.dart';
 
 class LobbyProvider extends ChangeNotifier {
   static final LobbyProvider _instance = LobbyProvider._internal();
-  final List<PlayerModel> _roomPlayers = [];
+
+  /// TODO: remove dummy players
+  final List<PlayerModel> _roomPlayers = [
+    PlayerModel(id: 1, username: 'sebas'),
+    PlayerModel(id: 2, username: 'paul')
+  ];
   bool _loggedIn = false;
   bool _joinedRoom = false;
   bool _playerCreatedRoom = false;
@@ -16,6 +21,7 @@ class LobbyProvider extends ChangeNotifier {
   bool get playerCreatedRoom => _playerCreatedRoom;
   int get roomId => _roomId;
   int get playerCount => _roomPlayers.length;
+  List<PlayerModel> get players => List.unmodifiable(_roomPlayers);
 
   LobbyProvider._internal();
   factory LobbyProvider() {

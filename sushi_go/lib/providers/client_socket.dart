@@ -98,8 +98,8 @@ class ClientSocket {
     } else if (serverMessage.type == CLIENT_RECV_CHAT_MESSAGE) {
       // mensaje de chat recibido
       final message = messageJsonMap['message'] ?? '';
-      final userId = messageJsonMap['user_id'] ?? -1;
-      final username = messageJsonMap['username'] ?? '';
+      final userId = messageJsonMap['User_id'] ?? -1;
+      final username = messageJsonMap['Username'] ?? '';
       ChatProvider().messageReceived(userId, username, message);
     }
   }
