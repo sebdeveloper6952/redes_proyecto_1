@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sushi_go/models/player_model.dart';
 import 'package:sushi_go/providers/client_socket.dart';
+import 'package:sushi_go/providers/game_manager.dart';
 import 'package:sushi_go/providers/user_provider.dart';
 
 class LobbyProvider extends ChangeNotifier {
@@ -8,9 +9,11 @@ class LobbyProvider extends ChangeNotifier {
   final List<PlayerModel> _roomPlayers = [];
   bool _loggedIn = false;
   bool _joinedRoom = false;
+  bool _playerCreatedRoom = false;
   int _roomId = -1;
   bool get loggedIn => _loggedIn;
   bool get joinedRoom => _joinedRoom;
+  bool get playerCreatedRoom => _playerCreatedRoom;
   int get roomId => _roomId;
 
   LobbyProvider._internal();
@@ -25,6 +28,8 @@ class LobbyProvider extends ChangeNotifier {
 
   void createRoom() {
     ClientSocket().writeToSocket(CreateRoomMessage());
+    _playerCreatedRoom = true;
+    notifyListeners();
   }
 
   void joinRoom(int roomId) {
@@ -33,13 +38,18 @@ class LobbyProvider extends ChangeNotifier {
 
   void setJoinedRoom(int roomId) {
     _roomId = roomId;
-    _joinedRoom = _roomId > 0 ? true : false;
+    _joinedRoom = _roomId >= 0 ? true : false;
     notifyListeners();
   }
 
   void setRoomPlayers(List<dynamic> players) {
     _roomPlayers.clear();
     _roomPlayers.addAll(players.map((p) => PlayerModel.fromJson(p)).toList());
+  }
+
+  void startGame() {
+    ClientSocket().writeToSocket(StartGameMessage());
+    GameManager().setGameStarted(true);
   }
 }
 
@@ -49,8 +59,8 @@ class CreateRoomMessage extends ClientMessage {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'id': UserProvider().userId,
       'type': type,
+      'id': UserProvider().userId,
     };
   }
 }
@@ -67,6 +77,19 @@ class JoinRoomMessage extends ClientMessage {
       'type': type,
       'id': UserProvider().userId,
       'idCuarto': roomId,
+    };
+  }
+}
+
+class StartGameMessage extends ClientMessage {
+  final int type = ClientSocket.CLIENT_READY;
+  final int userId = UserProvider().userId;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'id': userId,
     };
   }
 }

@@ -23,9 +23,10 @@ class GameManager extends ChangeNotifier {
   };
 
   List<SushiGoCard> _cards = [];
-  List<SushiGoCard> get cards => List.unmodifiable(_cards);
   int _currentTurn = 1;
   bool _waitingForNextTurn = false;
+  List<SushiGoCard> get cards => List.unmodifiable(_cards);
+  bool gameStarted = false;
   bool get waitingForNextTurn => _waitingForNextTurn;
 
   /// constructores
@@ -33,8 +34,6 @@ class GameManager extends ChangeNotifier {
     return _instance;
   }
   GameManager._internal();
-
-  void startGame() {}
 
   void setCards(List<int> cardIds) {
     _cards.clear();
@@ -55,6 +54,11 @@ class GameManager extends ChangeNotifier {
 
   void setWinners(List<dynamic> winners) {
     winners.forEach((i) {});
+    notifyListeners();
+  }
+
+  void setGameStarted(bool value) {
+    gameStarted = value;
     notifyListeners();
   }
 }
