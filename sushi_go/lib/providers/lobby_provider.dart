@@ -15,6 +15,7 @@ class LobbyProvider extends ChangeNotifier {
   bool get joinedRoom => _joinedRoom;
   bool get playerCreatedRoom => _playerCreatedRoom;
   int get roomId => _roomId;
+  int get playerCount => _roomPlayers.length;
 
   LobbyProvider._internal();
   factory LobbyProvider() {
@@ -45,6 +46,7 @@ class LobbyProvider extends ChangeNotifier {
   void setRoomPlayers(List<dynamic> players) {
     _roomPlayers.clear();
     _roomPlayers.addAll(players.map((p) => PlayerModel.fromJson(p)).toList());
+    notifyListeners();
   }
 
   void startGame() {
