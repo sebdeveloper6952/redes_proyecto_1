@@ -21,6 +21,7 @@ class ClientSocket {
   static const int CLIENT_SEND_CARD = 112;
   static const int SERVER_CARDS_RECEIVED = 113;
   static const int SERVER_GAME_FINISH = 114;
+  static const int SERVER_PLAYER_JOINED_ROOM = 115;
   static const int CLIENT_SEND_CHAT_MESSAGE = 200;
   static const int CLIENT_RECV_CHAT_MESSAGE = 201;
   Socket _socket;
@@ -75,7 +76,8 @@ class ClientSocket {
       LobbyProvider().setJoinedRoom(roomId);
     } else if (serverMessage.type == SERVER_JOIN_ROOM) {
       // status indica el jugador se pudo unir al cuarto
-      final status = messageJsonMap['status'] ?? false;
+      final roomId = messageJsonMap['idCuarto'] ?? -1;
+      LobbyProvider().setJoinedRoom(roomId);
     } else if (serverMessage.type == SERVER_CARDS_RESPONSE) {
       final List<int> cardIds = messageJsonMap['cards'] ?? [];
       // algun error jeje
@@ -90,6 +92,9 @@ class ClientSocket {
       final List<dynamic> gameStatus = messageJsonMap['status'] ?? [];
       // notificar a game manager de los puntajes
       GameManager().setWinners(gameStatus);
+    } else if (serverMessage.type == SERVER_PLAYER_JOINED_ROOM) {
+      final playersMap = messageJsonMap['players'] ?? [];
+      LobbyProvider().setRoomPlayers(playersMap);
     } else if (serverMessage.type == CLIENT_RECV_CHAT_MESSAGE) {
       // mensaje de chat recibido
       final message = messageJsonMap['message'] ?? '';

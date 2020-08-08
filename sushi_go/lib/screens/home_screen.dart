@@ -20,14 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void _createRoom() async {
     print('Create room');
 
-    // TODO: remove
-    // DummyGameDriver().createRoom();
-
     /// mandar mensaje para crear cuarto
     _lobbyProvider.createRoom();
-
-    // Ejemplo de como navegar.
-    // FluroRouter.router.navigateTo(context, '/game');
   }
 
   void _joinRoom() async {
@@ -40,19 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (roomId == null) return;
 
-    // TODO: remove
-    // DummyGameDriver().joinRoom(int.parse(roomId));
-
     /// mandar mensaje para unirse a cuarto
-    _lobbyProvider.joinRoom(roomId);
+    _lobbyProvider.joinRoom(int.parse(roomId));
 
     print('Join room $roomId');
   }
 
   void _submitUsername() {
     if (_username == null || _username.length < 4) return;
-    // TODO: remove
-    // DummyGameDriver().login(_username);
 
     /// mandar mensaje de login
     _userProvider.setUsername(_username);

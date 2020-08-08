@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sushi_go/models/sushi_go_card.dart';
+import 'package:sushi_go/providers/lobby_provider.dart';
+import 'package:sushi_go/providers/user_provider.dart';
 import 'client_socket.dart';
 
 class GameManager extends ChangeNotifier {
@@ -32,6 +34,8 @@ class GameManager extends ChangeNotifier {
   }
   GameManager._internal();
 
+  void startGame() {}
+
   void setCards(List<int> cardIds) {
     _cards.clear();
     for (int id in cardIds) _cards.add(_cardsMap[id]);
@@ -52,6 +56,18 @@ class GameManager extends ChangeNotifier {
   void setWinners(List<dynamic> winners) {
     winners.forEach((i) {});
     notifyListeners();
+  }
+}
+
+class StartGameMessage extends ClientMessage {
+  final id = UserProvider().userId;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': ClientSocket.CLIENT_READY,
+    };
   }
 }
 
