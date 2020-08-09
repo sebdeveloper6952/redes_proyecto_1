@@ -19,12 +19,6 @@ class ChatProvider extends ChangeNotifier {
 
   void sendMessage(String message) async {
     if (message == null || message.length == 0) return;
-    _messages.add(
-      ChatMessageModel(
-        username: UserProvider().username,
-        message: message,
-      ),
-    );
     notifyListeners();
     ClientSocket().writeToSocket(
       _SocketSendChatMessage(message: message),

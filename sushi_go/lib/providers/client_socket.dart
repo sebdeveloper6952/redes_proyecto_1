@@ -15,7 +15,7 @@ class ClientSocket {
   static const int CLIENT_JOIN_ROOM = 106;
   static const int SERVER_JOIN_ROOM = 107;
   static const int CLIENT_READY = 108;
-  static const int SERVER_CLIENT_READY_ACK = 109;
+  static const int SERVER_GAME_READY = 109;
   static const int CLIENT_CARDS_REQUEST = 110;
   static const int SERVER_CARDS_RESPONSE = 111;
   static const int CLIENT_SEND_CARD = 112;
@@ -95,8 +95,12 @@ class ClientSocket {
         // status indica el jugador se pudo unir al cuarto
         final roomId = messageJsonMap['room_id'] ?? -1;
         LobbyProvider().setJoinedRoom(roomId);
+      } else if (serverMessage.type == SERVER_GAME_READY) {
+        /// si status == 1, la partida ya inicio
+        final status = messageJsonMap['status'] ?? 0;
+        if (status == 1) GameManager().setGameStarted(true);
       } else if (serverMessage.type == SERVER_CARDS_RESPONSE) {
-        final List<int> cardIds = messageJsonMap['cards'] ?? [];
+        final List<dynamic> cardIds = messageJsonMap['cards'] ?? [];
         // algun error jeje
         if (cardIds == null) {}
         // notificar a game manager que se recibieron nuevas cartas
