@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
         primaryColor: Colors.red,
-        accentColor: Colors.blue,
+        accentColor: Colors.orange[300],
         buttonTheme: ButtonThemeData(
           height: 48,
           shape: RoundedRectangleBorder(

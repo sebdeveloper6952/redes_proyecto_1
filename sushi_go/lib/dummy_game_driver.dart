@@ -19,18 +19,18 @@ class DummyGameDriver {
     final List<int> ids = [1, 1, 2, 3, 4, 4, 4, 3, 5];
     GameManager().setCards(ids);
 
-    Future.delayed(Duration(seconds: 10)).then((value) {
-      ChatProvider().messageReceived(1, 'paulb', 'ola amigos');
-    });
+    // Future.delayed(Duration(seconds: 10)).then((value) {
+    //   ChatProvider().messageReceived(1, 'paulb', 'ola amigos');
+    // });
 
-    Future.delayed(Duration(seconds: 13)).then((value) {
-      ChatProvider().messageReceived(2, 'axel', 'que tal estan');
-    });
+    // Future.delayed(Duration(seconds: 13)).then((value) {
+    //   ChatProvider().messageReceived(2, 'axel', 'que tal estan');
+    // });
 
-    Future.delayed(Duration(seconds: 17)).then((value) {
-      ChatProvider()
-          .messageReceived(1, 'paulb', 'ahi listo para unas partidas');
-    });
+    // Future.delayed(Duration(seconds: 17)).then((value) {
+    //   ChatProvider()
+    //       .messageReceived(1, 'paulb', 'ahi listo para unas partidas');
+    // });
   }
 
   void simulateCardsReceived() {
@@ -57,7 +57,7 @@ class DummyGameDriver {
   }
 
   void sendCards(List<int> cardIds) {
-    GameManager().chooseCardsForTurn(cardIds);
+    GameManager().chooseCardsForTurn();
     Future.delayed(Duration(seconds: 2), () {
       simulateCardsReceived();
     });
