@@ -102,12 +102,15 @@ class GameManager extends ChangeNotifier {
   }
 
   void setGameStarted(bool value) {
-    if (!gameStarted)
+    if (!gameStarted) {
       gameStarted = value;
-    else
-      _waitingForNextTurn = false;
+      if (!LobbyProvider().playerCreatedRoom)
+        ClientSocket().writeToSocket(ClientCardsRequest());
+    } else {
+      ClientSocket().writeToSocket(ClientCardsRequest());
+    }
+
     notifyListeners();
-    ClientSocket().writeToSocket(ClientCardsRequest());
   }
 }
 

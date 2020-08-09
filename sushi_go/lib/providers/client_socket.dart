@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/game_manager.dart';
 import 'package:sushi_go/providers/lobby_provider.dart';

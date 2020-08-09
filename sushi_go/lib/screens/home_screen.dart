@@ -36,8 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     /// mandar mensaje para unirse a cuarto
     _lobbyProvider.joinRoom(int.parse(roomId));
-
-    print('Join room $roomId');
   }
 
   void _submitUsername() {
