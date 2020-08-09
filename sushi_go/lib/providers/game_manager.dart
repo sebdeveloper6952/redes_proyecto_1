@@ -130,6 +130,8 @@ class SendCardsMessage extends ClientMessage {
   Map<String, dynamic> toJson() {
     return {
       'type': type,
+      'user_id': UserProvider().userId,
+      'room_id': LobbyProvider().roomId,
       'cards': cards,
     };
   }

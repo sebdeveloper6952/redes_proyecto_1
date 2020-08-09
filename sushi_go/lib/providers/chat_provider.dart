@@ -69,10 +69,10 @@ class _SocketSendChatMessage extends ClientMessage {
 
   Map<String, dynamic> toJson() {
     return {
-      "type": ClientSocket.CLIENT_SEND_CHAT_MESSAGE,
-      "User_id": UserProvider().userId,
-      "idCuarto": LobbyProvider().roomId,
-      "message": message,
+      'type': ClientSocket.CLIENT_SEND_CHAT_MESSAGE,
+      'user_id': UserProvider().userId,
+      'room_id': LobbyProvider().roomId,
+      'message': message,
     };
   }
 }
