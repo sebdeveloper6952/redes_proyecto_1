@@ -8,10 +8,7 @@ class LobbyProvider extends ChangeNotifier {
   static final LobbyProvider _instance = LobbyProvider._internal();
 
   /// TODO: remove dummy players
-  final List<PlayerModel> _roomPlayers = [
-    PlayerModel(id: 1, username: 'sebas'),
-    PlayerModel(id: 2, username: 'paul')
-  ];
+  final List<PlayerModel> _roomPlayers = [];
   bool _loggedIn = false;
   bool _joinedRoom = false;
   bool _playerCreatedRoom = false;
@@ -36,6 +33,12 @@ class LobbyProvider extends ChangeNotifier {
   void createRoom() {
     ClientSocket().writeToSocket(CreateRoomMessage());
     _playerCreatedRoom = true;
+    _roomPlayers.add(
+      PlayerModel(
+        id: UserProvider().userId,
+        username: UserProvider().username,
+      ),
+    );
     notifyListeners();
   }
 
@@ -68,7 +71,7 @@ class CreateRoomMessage extends ClientMessage {
   Map<String, dynamic> toJson() {
     return {
       'type': type,
-      'id': UserProvider().userId,
+      'user_id': UserProvider().userId,
     };
   }
 }

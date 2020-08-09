@@ -19,6 +19,7 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   GameManager _gameManager;
+  LobbyProvider _lobbyProvider;
   ChatProvider _chatProvider;
 
   /// enviar carta(s) seleccionada(s) a servidor
@@ -30,6 +31,7 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     _gameManager = context.read<GameManager>();
+    _lobbyProvider = context.read<LobbyProvider>();
     _chatProvider = context.read<ChatProvider>();
   }
 
@@ -116,7 +118,7 @@ class _GameScreenState extends State<GameScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cuarto: 123'),
+        title: Text('Cuarto: ${_lobbyProvider.roomId}'),
         actions: [
           IconButton(
             icon: Icon(Icons.autorenew),
