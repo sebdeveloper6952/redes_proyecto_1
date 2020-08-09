@@ -25,6 +25,9 @@ def generateHands(nArrays, nCards):
         aws2.append([])
     return aws, aws2
 
+def sendResults():
+    print("Area en construcción")
+
 def process_message(message, connection): 
     obj = json.loads(message)
     response =	{
@@ -50,7 +53,7 @@ def process_message(message, connection):
             "turn": 0,
             "decks": [],
             "selectedCards": [],
-            "cardsSend": 0
+            "cardsReceived": 0,
         }
         #Build response
         response["type"] = 105
@@ -83,7 +86,7 @@ def process_message(message, connection):
         for i in rooms[obj["room_id"]]["players"]:
             users[i]["socket"].send(repr(response).encode("utf-8"))
         response = None    
-    elif (obj["type"] == 110): #110 Send deck to player
+    elif (obj["type"] == 110): #110 Send decks to players
         index = rooms[obj["room_id"]]["players"].index(obj["user_id"]) + rooms[obj["room_id"]]["turn"]
         nPlayers = len(rooms[obj["room_id"]]["players"])
         response["type"] = 111
@@ -95,11 +98,21 @@ def process_message(message, connection):
         nPlayers = len(rooms[obj["room_id"]]["players"])
         for i in obj["cards"]:
             if (i>0):
-                rooms[ obj["room_id"] ][  "decks"  ][ index % nPlayers ].append( abs(i) )
+                rooms[ obj["room_id"] ]["decks"][ index % nPlayers ].append( abs(i) )
             else:
-                rooms[ obj["room_id"] ][  "decks"  ][ index % nPlayers ].remove(i)
-                rooms[ obj["room_id"] ]["selectedCards"][pos].append(i)       
-        response["type"] = 113
+                rooms[ obj["room_id"] ]["decks"][ index % nPlayers ].remove(i)
+                rooms[ obj["room_id"] ]["selectedCards"][pos].append(i)
+        #Add from receive cards
+        rooms[ obj["room_id"] ]["cardsReceived"] += 1
+        #Check # receive cards       
+        if (rooms[ obj["room_id"] ]["cardsReceived"] == len(rooms[ obj["room_id"] ]["players"])): #if every player send their cards
+            #Check if the game is over
+            if (len(rooms[ obj["room_id"] ]["decks"][0]) == 0):
+                sendResults() ##LLamar al 114
+            else:
+                rooms[ obj["room_id"] ]["turn"] += 1
+                process_message('{"type": 108, "room_id":'+str(obj["room_id"]) +'}', None)
+        response = None
     elif (obj["type"] == 200): #200 Send message
         response["type"] = 201
         response["message"] = obj["message"]
@@ -141,7 +154,8 @@ def service_connection(key, mask):
             print("recibi", message.decode("utf-8"), type(message.decode("utf-8")))
             response = process_message(message.decode("utf-8"), sock)
             if (response):
-                sent = sock.send(repr(response).encode("utf-8"))  # Should be ready to write
+                sock.send(repr(response).encode("utf-8"))  # Should be ready to write
+                # sent = sock.send(repr(response).encode("utf-8"))  # For checking send data
             data.outb = data.outb[len(message):]
 ###########################################################################################
 
