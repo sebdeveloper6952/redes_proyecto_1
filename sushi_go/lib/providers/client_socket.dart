@@ -101,7 +101,7 @@ class ClientSocket {
         final status = messageJsonMap['status'] ?? 0;
         if (status == 1) GameManager().setGameStarted(true);
       } else if (serverMessage.type == SERVER_CARDS_RESPONSE) {
-        final List<int> cardIds = messageJsonMap['cards'] ?? [];
+        final List<dynamic> cardIds = messageJsonMap['cards'] ?? [];
         // algun error jeje
         if (cardIds == null) {}
         // notificar a game manager que se recibieron nuevas cartas

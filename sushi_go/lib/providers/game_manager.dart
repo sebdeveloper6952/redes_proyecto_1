@@ -37,7 +37,7 @@ class GameManager extends ChangeNotifier {
   }
   GameManager._internal();
 
-  void setCards(List<int> cardIds) {
+  void setCards(List<dynamic> cardIds) {
     _cards.clear();
     int uid = 0;
     for (int id in cardIds) {
@@ -104,8 +104,27 @@ class GameManager extends ChangeNotifier {
   }
 
   void setGameStarted(bool value) {
-    gameStarted = value;
+    if (!gameStarted)
+      gameStarted = value;
+    else
+      _waitingForNextTurn = false;
     notifyListeners();
+    ClientSocket().writeToSocket(ClientCardsRequest());
+  }
+}
+
+class ClientCardsRequest extends ClientMessage {
+  final int type = ClientSocket.CLIENT_CARDS_REQUEST;
+  final int userId = UserProvider().userId;
+  final int roomId = LobbyProvider().roomId;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'user_id': userId,
+      'room_id': roomId,
+    };
   }
 }
 
