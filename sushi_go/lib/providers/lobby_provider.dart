@@ -83,21 +83,21 @@ class JoinRoomMessage extends ClientMessage {
   Map<String, dynamic> toJson() {
     return {
       'type': type,
-      'id': UserProvider().userId,
-      'idCuarto': roomId,
+      'user_id': UserProvider().userId,
+      'room_id': roomId,
     };
   }
 }
 
 class StartGameMessage extends ClientMessage {
   final int type = ClientSocket.CLIENT_READY;
-  final int userId = UserProvider().userId;
+  final int roomId = LobbyProvider().roomId;
 
   @override
   Map<String, dynamic> toJson() {
     return {
       'type': type,
-      'id': userId,
+      'room_id': roomId,
     };
   }
 }
