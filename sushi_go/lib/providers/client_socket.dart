@@ -67,16 +67,16 @@ class ClientSocket {
 
     if (serverMessage.type == SERVER_LOGIN_RES) {
       // userId indica si login fue exitoso
-      final userId = messageJsonMap['id'] ?? -1;
+      final userId = messageJsonMap['user_id'] ?? -1;
       UserProvider().setUserId(userId);
       LobbyProvider().setLoggedIn();
     } else if (serverMessage.type == SERVER_CREATE_ROOM) {
       // roomId indica si fue posible crear un cuarto
-      final roomId = messageJsonMap['id'] ?? -1;
+      final roomId = messageJsonMap['room_id'] ?? -1;
       LobbyProvider().setJoinedRoom(roomId);
     } else if (serverMessage.type == SERVER_JOIN_ROOM) {
       // status indica el jugador se pudo unir al cuarto
-      final roomId = messageJsonMap['idCuarto'] ?? -1;
+      final roomId = messageJsonMap['room_id'] ?? -1;
       LobbyProvider().setJoinedRoom(roomId);
     } else if (serverMessage.type == SERVER_CARDS_RESPONSE) {
       final List<int> cardIds = messageJsonMap['cards'] ?? [];
@@ -98,8 +98,8 @@ class ClientSocket {
     } else if (serverMessage.type == CLIENT_RECV_CHAT_MESSAGE) {
       // mensaje de chat recibido
       final message = messageJsonMap['message'] ?? '';
-      final userId = messageJsonMap['User_id'] ?? -1;
-      final username = messageJsonMap['Username'] ?? '';
+      final userId = messageJsonMap['user_id'] ?? -1;
+      final username = messageJsonMap['username'] ?? '';
       ChatProvider().messageReceived(userId, username, message);
     }
   }
