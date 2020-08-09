@@ -8,23 +8,25 @@ class GameManager extends ChangeNotifier {
   /// singleton
   static final GameManager _instance = GameManager._internal();
   final _cardsMap = {
-    1: SushiGoCard(id: 1, name: 'Sashimi'),
-    2: SushiGoCard(id: 2, name: 'Chopsticks'),
-    3: SushiGoCard(id: 3, name: 'Pudding'),
-    4: SushiGoCard(id: 4, name: '3x Maki Roll'),
-    5: SushiGoCard(id: 5, name: '2x Maki Roll'),
-    6: SushiGoCard(id: 6, name: '1x Maki Roll'),
-    7: SushiGoCard(id: 7, name: 'Wasabi'),
-    8: SushiGoCard(id: 8, name: 'Dumplings'),
-    9: SushiGoCard(id: 9, name: 'Tempura'),
-    10: SushiGoCard(id: 10, name: 'Salmon Nigiri'),
-    11: SushiGoCard(id: 11, name: 'Egg Nigiri'),
-    12: SushiGoCard(id: 12, name: 'Squid Nigiri')
+    1: 'Sashimi',
+    2: 'Chopsticks',
+    3: 'Pudding',
+    4: '3x Maki Roll',
+    5: '2x Maki Roll',
+    6: '1x Maki Roll',
+    7: 'Wasabi',
+    8: 'Dumplings',
+    9: 'Tempura',
+    10: 'Salmon Nigiri',
+    11: 'Egg Nigiri',
+    12: 'Squid Nigiri'
   };
 
   List<SushiGoCard> _cards = [];
+  final List<SushiGoCard> _currentlySelectedCards = [];
   int _currentTurn = 1;
   bool _waitingForNextTurn = false;
+  bool _playerHasChopsticks = true;
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
   bool gameStarted = false;
   bool get waitingForNextTurn => _waitingForNextTurn;
@@ -37,16 +39,60 @@ class GameManager extends ChangeNotifier {
 
   void setCards(List<int> cardIds) {
     _cards.clear();
-    for (int id in cardIds) _cards.add(_cardsMap[id]);
+    int uid = 0;
+    for (int id in cardIds) {
+      _cards.add(SushiGoCard(id: id, uid: uid, name: _cardsMap[id]));
+      uid++;
+    }
     _waitingForNextTurn = false;
     notifyListeners();
   }
 
+  /// Agrega o quita la carta con id cardId a una lista de cartas
+  /// seleccionadas.
+  bool toggleSelectedCard(SushiGoCard card) {
+    final index = _currentlySelectedCards.indexOf(card);
+    bool selected = false;
+
+    if (_playerHasChopsticks) {
+      if (_currentlySelectedCards.length < 2 && index == -1) {
+        _currentlySelectedCards.add(card);
+        selected = true;
+      } else if (index >= 0) {
+        _currentlySelectedCards.removeAt(index);
+      }
+    } else if (_currentlySelectedCards.length < 1) {
+      _currentlySelectedCards.add(card);
+      selected = true;
+    } else if (index >= 0) {
+      _currentlySelectedCards.removeAt(index);
+    }
+
+    notifyListeners();
+    final test = _currentlySelectedCards.map((c) => c.id).toList();
+    print(test);
+
+    return selected;
+  }
+
   /// Envia cardIds al servidor para dejarle saber que esas fueron
   /// las cartas escogidas para este turno.
-  void chooseCardsForTurn(List<int> cardIds) {
+  // void chooseCardsForTurn(List<int> cardIds) {
+  void chooseCardsForTurn() {
     _waitingForNextTurn = true;
-    ClientSocket().writeToSocket(SendCardsMessage(cards: cardIds));
+
+    /// TODO: remove
+    // ClientSocket().writeToSocket(SendCardsMessage(cards: cardIds));
+
+    ClientSocket().writeToSocket(
+      SendCardsMessage(
+        cards: _currentlySelectedCards.map((c) => c.id).toList(),
+      ),
+    );
+
+    /// limpiar lista de cartas seleccionadas
+    _currentlySelectedCards.clear();
+
     notifyListeners();
   }
 

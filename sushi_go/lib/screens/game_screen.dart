@@ -18,21 +18,18 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+  GameManager _gameManager;
   ChatProvider _chatProvider;
-  final List<int> _selectedCards = [0];
-
-  /// Funcion ejecutada al hacer click en cada carta.
-  /// Puede cambiar.
-  void _onCardClick(SushiGoCard card) {
-    _selectedCards.replaceRange(0, 1, [card.id]);
-  }
 
   /// enviar carta(s) seleccionada(s) a servidor
-  void _sendCards() {}
+  void _sendCards() {
+    GameManager().chooseCardsForTurn();
+  }
 
   @override
   void initState() {
     super.initState();
+    _gameManager = context.read<GameManager>();
     _chatProvider = context.read<ChatProvider>();
   }
 
@@ -89,25 +86,25 @@ class _GameScreenState extends State<GameScreen> {
           ? LoadingDialog(
               title: 'Esperando a los demás...',
             )
-          : Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/img/background1.png"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            );
+          : Container();
     }
 
     _createGameWidget(GameManager gameManager) {
       return Stack(
         children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/img/background1.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
           ListView(
             children: gameManager.cards
                 .map(
                   (c) => CardWidget(
                     card: c,
-                    onClick: () => _onCardClick(c),
                   ),
                 )
                 .toList(),

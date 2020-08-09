@@ -57,7 +57,7 @@ class DummyGameDriver {
   }
 
   void sendCards(List<int> cardIds) {
-    GameManager().chooseCardsForTurn(cardIds);
+    GameManager().chooseCardsForTurn();
     Future.delayed(Duration(seconds: 2), () {
       simulateCardsReceived();
     });

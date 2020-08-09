@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sushi_go/providers/client_socket.dart';
 import 'package:sushi_go/providers/user_provider.dart';
 
