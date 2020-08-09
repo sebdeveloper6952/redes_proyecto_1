@@ -69,8 +69,6 @@ class GameManager extends ChangeNotifier {
     }
 
     notifyListeners();
-    final test = _currentlySelectedCards.map((c) => c.id).toList();
-    print(test);
 
     return selected;
   }
