@@ -15,14 +15,24 @@ class CardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => onClick(),
-      child: Card(
-        color: Colors.redAccent,
+      child: Container(
         child: Center(
           child: Text(
             card.name,
-            style: Theme.of(context).textTheme.subtitle1,
+            style: TextStyle (
+              fontSize: 20,
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/img/${card.name}.png"),
+          ),
+        ),
+        height: 130.0,
+        width: 130.0,
       ),
     );
   }
