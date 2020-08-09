@@ -70,8 +70,8 @@ def process_message(message, connection):
         for i in rooms[obj["room_id"]]["players"]:
             temp = {}
             temp["id"] = i
-            temp["username"] = users[i].username
-            response["players"] .append(temp)
+            temp["username"] = users[i]["username"]
+            response["players"].append(temp)
         for i in rooms[obj["room_id"]]["players"]: #For making the broadcast
             users[i]["socket"].send(repr(response).encode("utf-8"))
         response =  None
