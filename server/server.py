@@ -11,52 +11,52 @@ PORT = 65432        # Port
 rooms = {}
 users = {}
 #Create deck
-maso = np.concatenate((np.ones(14), np.ones(4) * 2 , np.ones(10) * 3, np.ones(8) * 4
+deck = np.concatenate((np.ones(14), np.ones(4) * 2 , np.ones(10) * 3, np.ones(8) * 4
                 , np.ones(12) * 5, np.ones(6) * 6, np.ones(6) * 7, np.ones(14) * 8
                 , np.ones(14) * 9, np.ones(10) * 10, np.ones(5) * 11, np.ones(5) * 12))
-maso = maso.astype(int)
+deck = deck.astype(int)
 
 def generateHands(nArrays, nCards):
-    np.random.shuffle(maso)
-    aws = [] 
-    aws2 = [] 
+    np.random.shuffle(deck)
+    aws = [] ##Array of decks
+    aws2 = []  ## Array for picked cards
     for i in range(nArrays):
-        aws.append(maso[i * nCards: (i+1) * nCards].tolist())
+        aws.append(deck[i * nCards: (i+1) * nCards].tolist())
         aws2.append([])
     return aws, aws2
 
 def process_message(message, connection): 
-    print("Entramos", message)
     obj = json.loads(message)
     response =	{
         "type": 0
     }
-    if (obj["type"] == 101):
+    if (obj["type"] == 101): #101 Login
         #Generate user id
         userId = len(users)
         #Add user to list
         users[userId] =  { #id
-            "username": obj["username"], #usuario
+            "username": obj["username"],
             "socket": connection
         }
         #Build response
         response["type"] = 102
         response["user_id"] = userId
-    elif (obj["type"] == 104):
+    elif (obj["type"] == 104): #104 Create room
         #Generate room id
         roomsId = len(rooms)
         #Add room to list
-        rooms[roomsId] =  { # de sala
-            "players": [obj["user_id"]], #players jugando en una sala,
+        rooms[roomsId] =  { # room
+            "players": [obj["user_id"]], #players playing on the romm,
             "turn": 0,
             "decks": [],
-            "selectedCards": []
+            "selectedCards": [],
+            "cardsSend": 0
         }
         #Build response
         response["type"] = 105
         response["room_id"] = roomsId
-    elif (obj["type"] == 106):
-        #Hacer el add del usuario a la lista
+    elif (obj["type"] == 106): #106 join room
+        #Add usser to list og players in the room
         rooms[obj["room_id"]]["players"].append(obj["user_id"])
         #Build response
         ''' Check first if is in the list and the length of the array '''
@@ -75,7 +75,7 @@ def process_message(message, connection):
         for i in rooms[obj["room_id"]]["players"]: #For making the broadcast
             users[i]["socket"].send(repr(response).encode("utf-8"))
         response =  None
-    elif (obj["type"] == 108):
+    elif (obj["type"] == 108): #108 Start game
         ''' Check if it is the manager and decks is empty'''
         rooms[obj["room_id"]]["decks"], rooms[obj["room_id"]]["selectedCards"] = generateHands(2, 10)
         response["type"] = 109
@@ -83,13 +83,13 @@ def process_message(message, connection):
         for i in rooms[obj["room_id"]]["players"]:
             users[i]["socket"].send(repr(response).encode("utf-8"))
         response = None    
-    elif (obj["type"] == 110):
-        #Mandar mazo
+    elif (obj["type"] == 110): #110 Send deck to player
         index = rooms[obj["room_id"]]["players"].index(obj["user_id"]) + rooms[obj["room_id"]]["turn"]
         nPlayers = len(rooms[obj["room_id"]]["players"])
         response["type"] = 111
         response["cards"] = rooms[ obj["room_id"] ][  "decks"  ][ index % nPlayers ]
-    elif (obj["type"] == 112):
+    elif (obj["type"] == 112):#112 Receive card from player
+        ## Add routine to send message when all have send their card 
         pos = rooms[obj["room_id"]]["players"].index(obj["user_id"])
         index = pos + rooms[obj["room_id"]]["turn"]
         nPlayers = len(rooms[obj["room_id"]]["players"])
@@ -98,15 +98,16 @@ def process_message(message, connection):
                 rooms[ obj["room_id"] ][  "decks"  ][ index % nPlayers ].append( abs(i) )
             else:
                 rooms[ obj["room_id"] ][  "decks"  ][ index % nPlayers ].remove(i)
-                rooms[ obj["room_id"] ]["selectedCards"][pos].append(i)        
+                rooms[ obj["room_id"] ]["selectedCards"][pos].append(i)       
         response["type"] = 113
-    elif (obj["type"] == 200):
+    elif (obj["type"] == 200): #200 Send message
         response["type"] = 201
         response["message"] = obj["message"]
         response["user_id"] = obj["user_id"]
-        response["Username"] = users[i]["username"]
+        response["username"] = users[obj["user_id"]]["username"]
         for i in rooms[obj["room_id"]]["players"]:
-            users[i]["socket"].send(repr(response).encode("utf-8"))
+            if (obj["user_id"] != i):
+                users[i]["socket"].send(repr(response).encode("utf-8"))
     return response
 
 #
