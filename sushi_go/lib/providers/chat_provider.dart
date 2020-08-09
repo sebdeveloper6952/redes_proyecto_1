@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sushi_go/providers/client_socket.dart';
+import 'package:sushi_go/providers/lobby_provider.dart';
 import 'package:sushi_go/providers/user_provider.dart';
 
 class ChatProvider extends ChangeNotifier {
@@ -69,6 +70,8 @@ class _SocketSendChatMessage extends ClientMessage {
   Map<String, dynamic> toJson() {
     return {
       "type": ClientSocket.CLIENT_SEND_CHAT_MESSAGE,
+      "User_id": UserProvider().userId,
+      "idCuarto": LobbyProvider().roomId,
       "message": message,
     };
   }
