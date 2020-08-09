@@ -60,47 +60,65 @@ class ClientSocket {
     final String stringMessage =
         String.fromCharCodes(data).replaceAll('\'', '"').trim();
 
-    /// TODO: remove
-    print('Received: $stringMessage');
-    final messageJsonMap = json.decode(stringMessage);
-    final ServerMessage serverMessage = ServerMessage.fromJson(messageJsonMap);
+    /// Por si llega mas de un mensaje.
+    List<String> messages = stringMessage.split('}{');
+    for (int i = 0; i < messages.length; i++) {
+      if (messages.length > 1) {
+        /// agregar {} faltantes
+        if (i != messages.length - 1)
+          messages[i] = '${messages[i]}}';
+        else if (i == (messages.length - 1))
+          messages[i] = '{${messages[i]}';
+        else
+          messages[i] = '{${messages[i]}}';
+      }
 
-    if (serverMessage.type == SERVER_LOGIN_RES) {
-      // userId indica si login fue exitoso
-      final userId = messageJsonMap['user_id'] ?? -1;
-      UserProvider().setUserId(userId);
-      LobbyProvider().setLoggedIn();
-    } else if (serverMessage.type == SERVER_CREATE_ROOM) {
-      // roomId indica si fue posible crear un cuarto
-      final roomId = messageJsonMap['room_id'] ?? -1;
-      LobbyProvider().setJoinedRoom(roomId);
-    } else if (serverMessage.type == SERVER_JOIN_ROOM) {
-      // status indica el jugador se pudo unir al cuarto
-      final roomId = messageJsonMap['room_id'] ?? -1;
-      LobbyProvider().setJoinedRoom(roomId);
-    } else if (serverMessage.type == SERVER_CARDS_RESPONSE) {
-      final List<int> cardIds = messageJsonMap['cards'] ?? [];
-      // algun error jeje
-      if (cardIds == null) {}
-      // notificar a game manager que se recibieron nuevas cartas
-      GameManager().setCards(cardIds);
-    } else if (serverMessage.type == SERVER_CARDS_RECEIVED) {
-      /// notificar a game manager de que cartas fueron recibidas.
-      GameManager().notifyServerReceivedCards();
-    } else if (serverMessage.type == SERVER_GAME_FINISH) {
-      // server responde que juego ha terminado
-      final List<dynamic> gameStatus = messageJsonMap['status'] ?? [];
-      // notificar a game manager de los puntajes
-      GameManager().setWinners(gameStatus);
-    } else if (serverMessage.type == SERVER_PLAYER_JOINED_ROOM) {
-      final playersMap = messageJsonMap['players'] ?? [];
-      LobbyProvider().setRoomPlayers(playersMap);
-    } else if (serverMessage.type == CLIENT_RECV_CHAT_MESSAGE) {
-      // mensaje de chat recibido
-      final message = messageJsonMap['message'] ?? '';
-      final userId = messageJsonMap['user_id'] ?? -1;
-      final username = messageJsonMap['username'] ?? '';
-      ChatProvider().messageReceived(userId, username, message);
+      if (messages[i].length < 3) continue;
+
+      /// TODO: remove
+      print('processing msg: ${messages[i]}');
+
+      final messageJsonMap = json.decode(messages[i]);
+      final ServerMessage serverMessage =
+          ServerMessage.fromJson(messageJsonMap);
+
+      if (serverMessage.type == SERVER_LOGIN_RES) {
+        // userId indica si login fue exitoso
+        final userId = messageJsonMap['user_id'] ?? -1;
+        UserProvider().setUserId(userId);
+        LobbyProvider().setLoggedIn();
+      } else if (serverMessage.type == SERVER_CREATE_ROOM) {
+        // roomId indica si fue posible crear un cuarto
+        final roomId = messageJsonMap['room_id'] ?? -1;
+        LobbyProvider().setJoinedRoom(roomId);
+      } else if (serverMessage.type == SERVER_JOIN_ROOM) {
+        // status indica el jugador se pudo unir al cuarto
+        final roomId = messageJsonMap['room_id'] ?? -1;
+        LobbyProvider().setJoinedRoom(roomId);
+      } else if (serverMessage.type == SERVER_CARDS_RESPONSE) {
+        final List<int> cardIds = messageJsonMap['cards'] ?? [];
+        // algun error jeje
+        if (cardIds == null) {}
+        // notificar a game manager que se recibieron nuevas cartas
+        GameManager().setCards(cardIds);
+      } else if (serverMessage.type == SERVER_CARDS_RECEIVED) {
+        /// notificar a game manager de que cartas fueron recibidas.
+        GameManager().notifyServerReceivedCards();
+      } else if (serverMessage.type == SERVER_GAME_FINISH) {
+        // server responde que juego ha terminado
+        final List<dynamic> gameStatus = messageJsonMap['status'] ?? [];
+        // notificar a game manager de los puntajes
+        GameManager().setWinners(gameStatus);
+      } else if (serverMessage.type == SERVER_PLAYER_JOINED_ROOM) {
+        final playersMap = messageJsonMap['players'] ?? [];
+        LobbyProvider().setRoomPlayers(playersMap);
+      } else if (serverMessage.type == CLIENT_RECV_CHAT_MESSAGE) {
+        // mensaje de chat recibido
+        final message = messageJsonMap['message'] ?? '';
+        final userId = messageJsonMap['user_id'] ?? -1;
+        final username = messageJsonMap['username'] ?? '';
+        ChatProvider().messageReceived(userId, username, message);
+      }
     }
   }
 
