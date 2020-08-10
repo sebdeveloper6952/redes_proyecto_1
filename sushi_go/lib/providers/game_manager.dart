@@ -23,6 +23,7 @@ class GameManager extends ChangeNotifier {
   };
 
   List<SushiGoCard> _cards = [];
+  final List<SushiGoCard> _ownedCards = [];
   final List<SushiGoCard> _currentlySelectedCards = [];
   int _currentTurn = 1;
   bool _waitingForNextTurn = false;
@@ -88,6 +89,9 @@ class GameManager extends ChangeNotifier {
         cards: _currentlySelectedCards.map((c) => c.id).toList(),
       ),
     );
+
+    /// guardar carta(s) seleccionadas para mostrar
+    _ownedCards.addAll(_currentlySelectedCards);
 
     /// limpiar lista de cartas seleccionadas
     _currentlySelectedCards.clear();
