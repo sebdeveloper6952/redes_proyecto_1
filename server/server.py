@@ -120,7 +120,7 @@ def process_message(message, connection):
         nPlayers = len(rooms[obj["room_id"]]["players"])
         for i in obj["cards"]:
             print("Carta: ", i)
-            if (i>0):
+            if (i<0):
                 rooms[ obj["room_id"] ]["decks"][ index % nPlayers ].append( abs(i) )
             else:
                 print("Antes", rooms[ obj["room_id"] ]["decks"][ index % nPlayers ])
