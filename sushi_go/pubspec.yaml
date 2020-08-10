@@ -49,18 +49,16 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/img/Chopsticks.png
-    - assets/img/Dumplings.png
-    - assets/img/Egg Nigiri.png
-    - assets/img/2x Maki Roll.png
-    - assets/img/3x Maki Roll.png
-    - assets/img/1x Maki Roll.png
-    - assets/img/Pudding.png
-    - assets/img/Salmon Nigiri.png
-    - assets/img/Sashimi.png
-    - assets/img/Squid Nigiri.png
-    - assets/img/Tempura.png
-    - assets/img/Wasabi.png
+    - assets/img/chopsticks.png
+    - assets/img/dumplings.png
+    - assets/img/egg_nigiri.png
+    - assets/img/maki_roll.png
+    - assets/img/pudding.png
+    - assets/img/salmon_nigiri.png
+    - assets/img/sashimi.png
+    - assets/img/squid_nigiri.png
+    - assets/img/tempura.png
+    - assets/img/wasabi.png
     - assets/img/background1.png
   
   # fonts:

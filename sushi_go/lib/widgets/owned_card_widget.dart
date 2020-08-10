@@ -15,11 +15,21 @@ class OwnedCardWidget extends StatelessWidget {
         height: 250,
         child: Card(
           color: Colors.redAccent,
-          child: Center(
-            child: Text(
-              card.name,
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
+          child: Column(
+            children: [
+              Text(
+                card.name,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Expanded(
+                child: Image.asset('assets/img/${card.img}'),
+              ),
+            ],
           ),
         ),
       ),
