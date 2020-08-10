@@ -27,10 +27,10 @@ def generateHands(nArrays, nCards):
 
 def sendResults(roomId):
     points = []
-    makiFirst = [-1, 0]
-    makiSecond = [-1, 0]
-    puddingsMost = [-1, 0]
-    puddingsLeast = [-1, 999]
+    makiFirst = [0, -1]
+    makiSecond = [0, -1]
+    puddingsMost = [0, -1]
+    puddingsLeast = [999, -1]
     for i in range(len(rooms[roomId]["decks"])):
         temporalPoints = 0
         #Chopsticks -ya
@@ -50,19 +50,19 @@ def sendResults(roomId):
         rooms[roomId]["decks"][i] = list(filter(lambda a: a != 6, rooms[roomId]["decks"][i]))
         rooms[roomId]["decks"][i] = list(filter(lambda a: a != 5, rooms[roomId]["decks"][i]))
         rooms[roomId]["decks"][i] = list(filter(lambda a: a != 4, rooms[roomId]["decks"][i]))
-        if (maki == makiFirst[1]):
+        if (maki == makiFirst[0] and maki != 0):
             makiFirst.append(i)
-        elif (maki > makiFirst[1]):
+        elif (maki > makiFirst[0]):
             makiSecond = [makiFirst[0], makiFirst[1]]
             makiFirst = [maki, i]
         #pudding
         pudding = rooms[roomId]["decks"][i].count(3)
         rooms[roomId]["decks"][i] = list(filter(lambda a: a != 3, rooms[roomId]["decks"][i]))
-        if (pudding == puddingsMost[1]):
+        if (pudding == puddingsMost[1] and pudding != 0):
             puddingsMost.append(i)
         elif (pudding > puddingsMost[1]):
             puddingsMost = [pudding, i]
-        elif (pudding == puddingsLeast[1]):
+        elif (pudding == puddingsLeast[1] and pudding != 0):
             puddingsLeast.append(i)
         elif (pudding < puddingsLeast[1]):
             puddingsLeast = [pudding,i]
@@ -91,17 +91,17 @@ def sendResults(roomId):
                     temporalPoints += 3
         points.append(temporalPoints)
     for i in range(1,len(makiFirst)):
-        if (i > -1):
-            points[i] += 6 // len(range(1,len(makiFirst)))
+        if (makiFirst[i] > -1):
+            points[makiFirst[i]] += 6 // len(range(1,len(makiFirst)))
     for i in range(1,len(makiSecond)):
-        if (i > -1):
-            points[i] += 3 // len(range(1,len(makiSecond)))
+        if (makiSecond[i] > -1):
+            points[makiSecond[i]] += 3 // len(range(1,len(makiSecond)))
     for i in range(1,len(puddingsMost)):
-        if (i > -1):
-            points[i] += 6 // len(range(1,len(puddingsMost)))
+        if (puddingsMost[i] > -1):
+            points[puddingsMost[i]] += 6 // len(range(1,len(puddingsMost)))
     for i in range(1,len(puddingsLeast)):
-        if (i > -1):
-            points[i] -= 6 // len(range(1,len(puddingsLeast)))
+        if (puddingsMost[i] > -1):
+            points[puddingsMost[i]] -= 6 // len(range(1,len(puddingsLeast)))
     
     response = {}
     response["type"] = 114
