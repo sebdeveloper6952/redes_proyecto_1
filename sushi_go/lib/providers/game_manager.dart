@@ -73,6 +73,10 @@ class GameManager extends ChangeNotifier {
     return selected;
   }
 
+  bool isCardSelected(SushiGoCard card) {
+    return _currentlySelectedCards.contains(card);
+  }
+
   /// Envia cardIds al servidor para dejarle saber que esas fueron
   /// las cartas escogidas para este turno.
   // void chooseCardsForTurn(List<int> cardIds) {
