@@ -1,4 +1,9 @@
-#101
+#101 login
 {"type": 101,  "username": "username"}
 {"type": 101,  "username": "username2"}
-#
+#104 Create room
+{ "id": 1, "type": 104}
+#106 join room
+{  "type": 106, "id": 0, "idCuarto": 0}
+#Initiate game
+{ "id": 0, "type": 108}

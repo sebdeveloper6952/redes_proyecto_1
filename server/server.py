@@ -25,7 +25,28 @@ def generateHands(nArrays, nCards):
         aws2.append([])
     return aws, aws2
 
-def sendResults():
+def sendResults(roomId):
+    points = []
+
+    for i in range(len(rooms[roomId]["decks"])):
+        wassabi = False
+        temporalPoints = 0
+        #Chopsticks
+        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 2, rooms[roomId]["decks"][i]))
+        #Dumplins
+        dumplins = rooms[roomId]["decks"][i].count(8)
+        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 8, rooms[roomId]["decks"][i]))
+        #Sashimi
+        sashimi = rooms[roomId]["decks"][i].count(1)
+        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 1, rooms[roomId]["decks"][i]))
+        #Tempura
+        tempura = rooms[roomId]["decks"][i].count(9)
+        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 9, rooms[roomId]["decks"][i]))
+
+
+        temporalPoints += dumplins #add conversion to points
+
+
     print("Area en construcción")
 
 def process_message(message, connection): 
@@ -79,8 +100,9 @@ def process_message(message, connection):
             users[i]["socket"].send(repr(response).encode("utf-8"))
         response =  None
     elif (obj["type"] == 108): #108 Start game
-        ''' Check if it is the manager and decks is empty'''
-        rooms[obj["room_id"]]["decks"], rooms[obj["room_id"]]["selectedCards"] = generateHands(2, 10)
+        ''' Check if it is the manager and decks is empty, manage amount of cards
+        '''
+        rooms[obj["room_id"]]["decks"], rooms[obj["room_id"]]["selectedCards"] = generateHands(len(rooms[obj["room_id"]]["players"]), 10)
         response["type"] = 109
         response["status"] = 1
         for i in rooms[obj["room_id"]]["players"]:
@@ -96,6 +118,7 @@ def process_message(message, connection):
         pos = rooms[obj["room_id"]]["players"].index(obj["user_id"])
         index = pos + rooms[obj["room_id"]]["turn"]
         nPlayers = len(rooms[obj["room_id"]]["players"])
+        print(obj["cards"])
         for i in obj["cards"]:
             if (i>0):
                 rooms[ obj["room_id"] ]["decks"][ index % nPlayers ].append( abs(i) )
@@ -108,7 +131,7 @@ def process_message(message, connection):
         if (rooms[ obj["room_id"] ]["cardsReceived"] == len(rooms[ obj["room_id"] ]["players"])): #if every player send their cards
             #Check if the game is over
             if (len(rooms[ obj["room_id"] ]["decks"][0]) == 0):
-                sendResults() ##LLamar al 114
+                sendResults(obj["room_id"]) ##LLamar al 114
             else:
                 rooms[ obj["room_id"] ]["turn"] += 1
                 process_message('{"type": 108, "room_id":'+str(obj["room_id"]) +'}', None)
