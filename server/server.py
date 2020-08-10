@@ -54,18 +54,18 @@ def sendResults(roomId):
             makiFirst.append(i)
         elif (maki > makiFirst[1]):
             makiSecond = [makiFirst[0], makiFirst[1]]
-            makiFirst = [i, maki]
+            makiFirst = [maki, i]
         #pudding
         pudding = rooms[roomId]["decks"][i].count(3)
         rooms[roomId]["decks"][i] = list(filter(lambda a: a != 3, rooms[roomId]["decks"][i]))
         if (pudding == puddingsMost[1]):
             puddingsMost.append(i)
         elif (pudding > puddingsMost[1]):
-            puddingsMost = [i, pudding]
+            puddingsMost = [pudding, i]
         elif (pudding == puddingsLeast[1]):
             puddingsLeast.append(i)
         elif (pudding < puddingsLeast[1]):
-            puddingsLeast = [i, pudding]
+            puddingsLeast = [pudding,i]
         #Nigiri
         wasabi = 0
         for j in rooms[roomId]["decks"][i]:
@@ -91,13 +91,17 @@ def sendResults(roomId):
                     temporalPoints += 3
         points.append(temporalPoints)
     for i in range(1,len(makiFirst)):
-        points[i] += 6 // len(range(1,len(makiFirst)))
+        if (i > -1):
+            points[i] += 6 // len(range(1,len(makiFirst)))
     for i in range(1,len(makiSecond)):
-        points[i] += 3 // len(range(1,len(makiSecond)))
+        if (i > -1):
+            points[i] += 3 // len(range(1,len(makiSecond)))
     for i in range(1,len(puddingsMost)):
-        points[i] += 6 // len(range(1,len(puddingsMost)))
+        if (i > -1):
+            points[i] += 6 // len(range(1,len(puddingsMost)))
     for i in range(1,len(puddingsLeast)):
-        points[i] -= 6 // len(range(1,len(puddingsLeast)))
+        if (i > -1):
+            points[i] -= 6 // len(range(1,len(puddingsLeast)))
     
     response = {}
     response["type"] = 114
