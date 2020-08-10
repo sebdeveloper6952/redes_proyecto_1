@@ -105,9 +105,7 @@ class _GameScreenState extends State<GameScreen> {
           ListView(
             children: gameManager.cards
                 .map(
-                  (c) => CardWidget(
-                    card: c,
-                  ),
+                  (c) => CardWidget(card: c),
                 )
                 .toList(),
           ),
