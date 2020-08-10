@@ -48,30 +48,30 @@ class _CardWidgetState extends State<CardWidget> {
           });
         },
         child: Card(
-        elevation: _elevation,
+          elevation: _elevation,
         child: Container(
-          child: Text(
-            widget.card.name,
-            textAlign: TextAlign.center,
-            style: TextStyle (
-              fontSize: 25,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
+            child: Text(
+              widget.card.name,
+              textAlign: TextAlign.center,
+              style: TextStyle (
+                fontSize: 25,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 2,
+                color: Colors.red,
+              ),
+              image: DecorationImage(
+                image: AssetImage("assets/img/${widget.card.name}.png"),
+              ),
+            ),
+            height: 130.0,
+            width: 130.0,
           ),
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 2,
-              color: Colors.red,
-            ),
-            image: DecorationImage(
-              image: AssetImage("assets/img/${widget.card.name}.png"),
-            ),
-          ),
-          height: 130.0,
-          width: 130.0,
         ),
-      ),
       ),
     );
   }
