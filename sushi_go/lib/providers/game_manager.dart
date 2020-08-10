@@ -26,7 +26,7 @@ class GameManager extends ChangeNotifier {
   final List<SushiGoCard> _currentlySelectedCards = [];
   int _currentTurn = 1;
   bool _waitingForNextTurn = false;
-  bool _playerHasChopsticks = true;
+  bool _playerHasChopsticks = false;
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
   bool gameStarted = false;
   bool get waitingForNextTurn => _waitingForNextTurn;
@@ -78,9 +78,6 @@ class GameManager extends ChangeNotifier {
   // void chooseCardsForTurn(List<int> cardIds) {
   void chooseCardsForTurn() {
     _waitingForNextTurn = true;
-
-    /// TODO: remove
-    // ClientSocket().writeToSocket(SendCardsMessage(cards: cardIds));
 
     ClientSocket().writeToSocket(
       SendCardsMessage(
