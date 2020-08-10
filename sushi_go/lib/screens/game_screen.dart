@@ -9,6 +9,7 @@ import 'package:badges/badges.dart';
 import 'package:sushi_go/widgets/chat_widget.dart';
 import 'package:sushi_go/widgets/loading_card.dart';
 import 'package:sushi_go/widgets/lobby_player_widget.dart';
+import 'package:sushi_go/widgets/owned_card_widget.dart';
 
 class GameScreen extends StatefulWidget {
   GameScreen({Key key}) : super(key: key);
@@ -102,12 +103,29 @@ class _GameScreenState extends State<GameScreen> {
               ),
             ),
           ),
-          ListView(
-            children: gameManager.cards
-                .map(
-                  (c) => CardWidget(card: c),
-                )
-                .toList(),
+          Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: gameManager.ownedCards
+                      .map(
+                        (c) => OwnedCardWidget(card: c),
+                      )
+                      .toList(),
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: gameManager.cards
+                      .map(
+                        (c) => CardWidget(card: c),
+                      )
+                      .toList(),
+                ),
+              ),
+            ],
           ),
           _createLoadingWidget(gameManager.waitingForNextTurn),
         ],
