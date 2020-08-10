@@ -112,7 +112,7 @@ def sendResults(roomId):
         obj["username"] = users[ rooms[roomId]["players"][i] ]["username"]
         obj["points"] = points[i] 
         response["status"].append(obj)
-    for i in rooms[obj["roomId"]]["players"]:
+    for i in rooms[roomId]["players"]:
             users[i]["socket"].send(repr(response).encode("utf-8"))
 
     #Remove room
