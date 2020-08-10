@@ -21,6 +21,20 @@ class GameManager extends ChangeNotifier {
     11: 'Egg Nigiri',
     12: 'Squid Nigiri'
   };
+  final _imgMap = {
+    1: 'sashimi.png',
+    2: 'chopsticks.png',
+    3: 'pudding.png',
+    4: 'maki_roll.png',
+    5: 'maki_roll.png',
+    6: 'maki_roll.png',
+    7: 'wasabi.png',
+    8: 'dumplings.png',
+    9: 'tempura.png',
+    10: 'salmon_nigiri.png',
+    11: 'egg_nigiri.png',
+    12: 'squid_nigiri.png'
+  };
 
   List<SushiGoCard> _cards = [];
   final List<SushiGoCard> _ownedCards = [];
@@ -43,7 +57,14 @@ class GameManager extends ChangeNotifier {
     _cards.clear();
     int uid = 0;
     for (int id in cardIds) {
-      _cards.add(SushiGoCard(id: id, uid: uid, name: _cardsMap[id]));
+      _cards.add(
+        SushiGoCard(
+          id: id,
+          uid: uid,
+          name: _cardsMap[id],
+          img: _imgMap[id],
+        ),
+      );
       uid++;
     }
     _waitingForNextTurn = false;

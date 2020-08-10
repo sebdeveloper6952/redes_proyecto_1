@@ -55,15 +55,22 @@ class _CardWidgetState extends State<CardWidget> {
             child: Card(
               elevation: _elevation,
               color: _selected ? Colors.greenAccent : Colors.redAccent,
-                child: Text(
-                  widget.card.name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle (
-                    fontSize: 25,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+              child: Column(
+                children: [
+                  Text(
+                    widget.card.name,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
+                  Expanded(
+                    child: Image.asset('assets/img/${widget.card.img}'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -71,9 +78,6 @@ class _CardWidgetState extends State<CardWidget> {
           border: Border.all(
             width: 2,
             color: Colors.red,
-          ),
-          image: DecorationImage(
-            image: AssetImage("assets/img/${widget.card.name}.png"),
           ),
         ),
       ),
