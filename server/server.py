@@ -102,7 +102,8 @@ def process_message(message, connection):
     elif (obj["type"] == 108): #108 Start game
         ''' Check if it is the manager and decks is empty, manage amount of cards
         '''
-        rooms[obj["room_id"]]["decks"], rooms[obj["room_id"]]["selectedCards"] = generateHands(len(rooms[obj["room_id"]]["players"]), 10)
+        if (len(rooms[obj["room_id"]]["decks"]) == 0):
+            rooms[obj["room_id"]]["decks"], rooms[obj["room_id"]]["selectedCards"] = generateHands(len(rooms[obj["room_id"]]["players"]), 10)
         response["type"] = 109
         response["status"] = 1
         for i in rooms[obj["room_id"]]["players"]:
