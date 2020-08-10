@@ -55,13 +55,25 @@ class _CardWidgetState extends State<CardWidget> {
             child: Card(
               elevation: _elevation,
               color: _selected ? Colors.greenAccent : Colors.redAccent,
-              child: Center(
                 child: Text(
                   widget.card.name,
-                  style: Theme.of(context).textTheme.subtitle1,
+                  textAlign: TextAlign.center,
+                  style: TextStyle (
+                    fontSize: 25,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
             ),
+          ),
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: Colors.red,
+          ),
+          image: DecorationImage(
+            image: AssetImage("assets/img/${widget.card.name}.png"),
           ),
         ),
       ),
