@@ -16,17 +16,12 @@ class _HomeScreenState extends State<HomeScreen> {
   UserProvider _userProvider;
   LobbyProvider _lobbyProvider;
   String _username;
-  bool _loading = false;
 
   void _createRoom() async {
     print('Create room');
 
-    // TODO: remove
-    DummyGameDriver().createRoom();
-    // _lobbyProvider.createRoom();
-
-    // Ejemplo de como navegar.
-    // FluroRouter.router.navigateTo(context, '/game');
+    /// mandar mensaje para crear cuarto
+    _lobbyProvider.createRoom();
   }
 
   void _joinRoom() async {
@@ -39,108 +34,75 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (roomId == null) return;
 
-    // TODO: remove
-    DummyGameDriver().joinRoom(int.parse(roomId));
-    // _lobbyProvider.joinRoom(roomId);
-
-    print('Join room $roomId');
+    /// mandar mensaje para unirse a cuarto
+    _lobbyProvider.joinRoom(int.parse(roomId));
   }
 
   void _submitUsername() {
     if (_username == null || _username.length < 4) return;
+
+    /// mandar mensaje de login
     _userProvider.setUsername(_username);
-    // TODO: remove
-    DummyGameDriver().login(_username);
-    setState(() {
-      _loading = true;
-    });
   }
 
   @override
   void initState() {
     super.initState();
-    _userProvider = Provider.of<UserProvider>(context, listen: false);
-    _lobbyProvider = Provider.of<LobbyProvider>(context, listen: false);
+    _userProvider = context.read<UserProvider>();
+    _lobbyProvider = context.read<LobbyProvider>();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    final _usernameWidget = Container(
-      width: size.width / 2,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Hola! Ingresa tu nombre:'),
-          Container(
-            margin: const EdgeInsets.only(
-              top: 8,
-            ),
-            child: TextField(
-              onChanged: (val) {
-                _username = val;
-              },
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(
-              top: 8,
-            ),
-            height: 48,
-            width: size.width / 2,
-            child: RaisedButton(
-              child: _loading
-                  ? CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.red,
-                      ),
-                    )
-                  : Text(
-                      'INGRESAR',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-              onPressed: _loading ? null : () => _submitUsername(),
-            ),
-          ),
-        ],
+    final usernameWidget = Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
       ),
-    );
-
-    final _lobbyWidget = Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(
-              vertical: 8.0,
-            ),
-            width: 200,
-            child: RaisedButton(
-              onPressed: () => _createRoom(),
-              child: Text(
-                'CREAR CUARTO',
-                style: TextStyle(
-                  color: Colors.white,
+      body: Center(
+        child: Container(
+          width: size.width / 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Hola! Ingresa tu nombre:'),
+              Container(
+                margin: const EdgeInsets.only(
+                  top: 8,
+                ),
+                child: TextField(
+                  onChanged: (val) {
+                    _username = val;
+                  },
                 ),
               ),
-            ),
-          ),
-          Container(
-            width: 200,
-            child: RaisedButton(
-              onPressed: () => _joinRoom(),
-              child: Text(
-                'UNIRSE A CUARTO',
-                style: TextStyle(
-                  color: Colors.white,
+              Container(
+                margin: const EdgeInsets.only(
+                  top: 8,
+                ),
+                height: 48,
+                width: size.width / 2,
+                child: RaisedButton(
+                  child: _lobbyProvider.loggedIn
+                      ? CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.red,
+                          ),
+                        )
+                      : Text(
+                          'INGRESAR',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                  onPressed:
+                      _lobbyProvider.loggedIn ? null : () => _submitUsername(),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
 
@@ -149,7 +111,40 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Lobby'),
       ),
       body: Center(
-        child: _userProvider.userId == null ? _usernameWidget : _lobbyWidget,
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                ),
+                width: 200,
+                child: RaisedButton(
+                  onPressed: () => _createRoom(),
+                  child: Text(
+                    'CREAR CUARTO',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                width: 200,
+                child: RaisedButton(
+                  onPressed: () => _joinRoom(),
+                  child: Text(
+                    'UNIRSE A CUARTO',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
 
@@ -157,8 +152,11 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (c, lobbyProvider, w) {
         if (lobbyProvider.joinedRoom) {
           return GameScreen();
+        } else if (lobbyProvider.loggedIn) {
+          return lobbyWidget;
+        } else {
+          return usernameWidget;
         }
-        return lobbyWidget;
       },
     );
   }

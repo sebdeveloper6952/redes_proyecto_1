@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sushi_go/dummy_game_driver.dart';
 import 'package:sushi_go/models/sushi_go_card.dart';
 import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/game_manager.dart';
+import 'package:sushi_go/providers/lobby_provider.dart';
 import 'package:sushi_go/widgets/card_widget.dart';
 import 'package:badges/badges.dart';
 import 'package:sushi_go/widgets/chat_widget.dart';
 import 'package:sushi_go/widgets/loading_card.dart';
+import 'package:sushi_go/widgets/lobby_player_widget.dart';
 
 class GameScreen extends StatefulWidget {
   GameScreen({Key key}) : super(key: key);
@@ -17,31 +18,107 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+  GameManager _gameManager;
+  LobbyProvider _lobbyProvider;
   ChatProvider _chatProvider;
-  final List<int> _selectedCards = [0];
-
-  /// Funcion ejecutada al hacer click en cada carta.
-  /// Puede cambiar.
-  void _onCardClick(SushiGoCard card) {
-    _selectedCards.replaceRange(0, 1, [card.id]);
-  }
 
   /// enviar carta(s) seleccionada(s) a servidor
   void _sendCards() {
-    DummyGameDriver().sendCards(_selectedCards);
+    GameManager().chooseCardsForTurn();
   }
 
   @override
   void initState() {
     super.initState();
+    _gameManager = context.read<GameManager>();
+    _lobbyProvider = context.read<LobbyProvider>();
     _chatProvider = context.read<ChatProvider>();
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    _createWaitingRoomWidget(LobbyProvider lobby) {
+      final startGameBtn = lobby.playerCreatedRoom
+          ? Container(
+              margin: const EdgeInsets.symmetric(
+                vertical: 16,
+              ),
+              width: size.width / 2,
+              child: RaisedButton(
+                onPressed:
+                    lobby.playerCount > 1 ? () => lobby.startGame() : null,
+                child: Text(
+                  'INICIAR PARTIDA',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
+          : Container(
+              margin: const EdgeInsets.symmetric(
+                vertical: 16,
+              ),
+              child: Text('Esperando que inicie la partida...'),
+            );
+
+      return Center(
+        child: Container(
+          width: size.width / 2,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: lobby.players
+                      .map((p) => LobbyPlayerWidget(player: p))
+                      .toList(),
+                ),
+              ),
+              startGameBtn,
+            ],
+          ),
+        ),
+      );
+    }
+
+    _createLoadingWidget(bool waiting) {
+      return waiting
+          ? LoadingDialog(
+              title: 'Esperando a los demás...',
+            )
+          : Container();
+    }
+
+    _createGameWidget(GameManager gameManager) {
+      return Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/img/background1.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          ListView(
+            children: gameManager.cards
+                .map(
+                  (c) => CardWidget(
+                    card: c,
+                  ),
+                )
+                .toList(),
+          ),
+          _createLoadingWidget(gameManager.waitingForNextTurn),
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cuarto: 123'),
+        title: Text('Cuarto: ${_lobbyProvider.roomId}'),
         actions: [
           IconButton(
             icon: Icon(Icons.autorenew),
@@ -73,36 +150,13 @@ class _GameScreenState extends State<GameScreen> {
           )
         ],
       ),
-      body: Consumer<GameManager>(
-        builder: (context, gameManager, child) {
-          final loadingWidget = gameManager.waitingForNextTurn
-              ? LoadingDialog(
-                  title: 'Esperando a los demás...',
-                )
-              : Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/img/background1.png"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-              );
-
-          return Stack(
-            children: [
-              ListView(
-                children: gameManager.cards
-                    .map(
-                      (c) => CardWidget(
-                        card: c,
-                        onClick: () => _onCardClick(c),
-                      ),
-                    )
-                    .toList(),
-              ), 
-              loadingWidget,
-            ],
-          );
+      body: Consumer2<GameManager, LobbyProvider>(
+        builder: (context, gameManager, lobbyProvider, widget) {
+          if (gameManager.gameStarted) {
+            return _createGameWidget(gameManager);
+          } else {
+            return _createWaitingRoomWidget(lobbyProvider);
+          }
         },
       ),
     );

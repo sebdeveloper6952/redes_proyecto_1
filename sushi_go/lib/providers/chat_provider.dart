@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sushi_go/providers/client_socket.dart';
+import 'package:sushi_go/providers/lobby_provider.dart';
 import 'package:sushi_go/providers/user_provider.dart';
 
 class ChatProvider extends ChangeNotifier {
@@ -19,12 +19,6 @@ class ChatProvider extends ChangeNotifier {
 
   void sendMessage(String message) async {
     if (message == null || message.length == 0) return;
-    _messages.add(
-      ChatMessageModel(
-        username: UserProvider().username,
-        message: message,
-      ),
-    );
     notifyListeners();
     ClientSocket().writeToSocket(
       _SocketSendChatMessage(message: message),
@@ -69,8 +63,10 @@ class _SocketSendChatMessage extends ClientMessage {
 
   Map<String, dynamic> toJson() {
     return {
-      "type": ClientSocket.CLIENT_SEND_CHAT_MESSAGE,
-      "message": message,
+      'type': ClientSocket.CLIENT_SEND_CHAT_MESSAGE,
+      'user_id': UserProvider().userId,
+      'room_id': LobbyProvider().roomId,
+      'message': message,
     };
   }
 }

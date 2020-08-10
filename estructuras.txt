@@ -1,0 +1,14 @@
+{
+    324546: { # de sala
+        players: [] #players jugando en una sala,
+        turn: 0,
+        masos: [],
+        selectedCards: []
+}
+{
+    324546: { #id
+        ip: 1921231.23123, #ip
+        username: usuario, #usuario
+    }
+}
+
