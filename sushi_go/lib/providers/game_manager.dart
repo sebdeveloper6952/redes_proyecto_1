@@ -29,6 +29,7 @@ class GameManager extends ChangeNotifier {
   bool _waitingForNextTurn = false;
   bool _playerHasChopsticks = false;
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
+  List<SushiGoCard> get ownedCards => List.unmodifiable(_ownedCards);
   bool gameStarted = false;
   bool get waitingForNextTurn => _waitingForNextTurn;
 

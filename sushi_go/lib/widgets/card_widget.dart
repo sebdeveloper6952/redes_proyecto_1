@@ -29,31 +29,38 @@ class _CardWidgetState extends State<CardWidget> {
   @override
   Widget build(BuildContext context) {
     _selected = _gameManager.isCardSelected(widget.card);
-    return GestureDetector(
-      onTap: () {
-        _selected = _gameManager.toggleSelectedCard(widget.card);
-        _elevation = _selected ? 8.0 : 1.0;
-        setState(() {});
-      },
-      child: MouseRegion(
-        onEnter: (event) {
-          setState(() {
-            _elevation = 8.0;
-          });
-        },
-        onExit: (event) {
-          if (_selected) return;
-          setState(() {
-            _elevation = 1.0;
-          });
-        },
-        child: Card(
-          elevation: _elevation,
-          color: _selected ? Colors.greenAccent : Colors.redAccent,
-          child: Center(
-            child: Text(
-              widget.card.name,
-              style: Theme.of(context).textTheme.subtitle1,
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        width: 200,
+        height: 250,
+        child: GestureDetector(
+          onTap: () {
+            _selected = _gameManager.toggleSelectedCard(widget.card);
+            _elevation = _selected ? 8.0 : 1.0;
+            setState(() {});
+          },
+          child: MouseRegion(
+            onEnter: (event) {
+              setState(() {
+                _elevation = 8.0;
+              });
+            },
+            onExit: (event) {
+              if (_selected) return;
+              setState(() {
+                _elevation = 1.0;
+              });
+            },
+            child: Card(
+              elevation: _elevation,
+              color: _selected ? Colors.greenAccent : Colors.redAccent,
+              child: Center(
+                child: Text(
+                  widget.card.name,
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+              ),
             ),
           ),
         ),
