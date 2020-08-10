@@ -100,8 +100,7 @@ def process_message(message, connection):
             users[i]["socket"].send(repr(response).encode("utf-8"))
         response =  None
     elif (obj["type"] == 108): #108 Start game
-        ''' Check if it is the manager and decks is empty, manage amount of cards
-        '''
+        ''' Check if it is the manager and decks is empty, manage amount of cards  '''
         if (len(rooms[obj["room_id"]]["decks"]) == 0):
             rooms[obj["room_id"]]["decks"], rooms[obj["room_id"]]["selectedCards"] = generateHands(len(rooms[obj["room_id"]]["players"]), 10)
         response["type"] = 109
@@ -137,6 +136,7 @@ def process_message(message, connection):
                 sendResults(obj["room_id"]) ##LLamar al 114
             else:
                 rooms[ obj["room_id"] ]["turn"] += 1
+                rooms[ obj["room_id"] ]["cardsReceived"] = 0
                 process_message('{"type": 108, "room_id":'+str(obj["room_id"]) +'}', None)
         response = None
     elif (obj["type"] == 200): #200 Send message
