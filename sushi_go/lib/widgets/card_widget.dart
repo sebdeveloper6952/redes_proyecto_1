@@ -17,7 +17,7 @@ class CardWidget extends StatefulWidget {
 
 class _CardWidgetState extends State<CardWidget> {
   GameManager _gameManager;
-  Color _bgColor = Colors.redAccent;
+  bool _selected;
   double _elevation = 1.0;
 
   @override
@@ -28,19 +28,27 @@ class _CardWidgetState extends State<CardWidget> {
 
   @override
   Widget build(BuildContext context) {
+    _selected = _gameManager.isCardSelected(widget.card);
     return GestureDetector(
       onTap: () {
-        final bool selected = _gameManager.toggleSelectedCard(widget.card);
-
-        /// TODO: definir aca estado de carta seleccionada / no seleccionada
-        setState(() {
-          _bgColor = selected ? Colors.greenAccent : Colors.redAccent;
-          _elevation = selected ? 4.0 : 1.0;
-        });
+        _selected = _gameManager.toggleSelectedCard(widget.card);
+        _elevation = _selected ? 8.0 : 1.0;
+        setState(() {});
       },
-      child: Card(
+      child: MouseRegion(
+        onEnter: (event) {
+          setState(() {
+            _elevation = 8.0;
+          });
+        },
+        onExit: (event) {
+          if (_selected) return;
+          setState(() {
+            _elevation = 1.0;
+          });
+        },
+        child: Card(
         elevation: _elevation,
-        color: _bgColor,
         child: Container(
           child: Text(
             widget.card.name,
@@ -63,6 +71,7 @@ class _CardWidgetState extends State<CardWidget> {
           height: 130.0,
           width: 130.0,
         ),
+      ),
       ),
     );
   }

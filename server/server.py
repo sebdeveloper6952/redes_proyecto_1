@@ -89,6 +89,7 @@ def sendResults(roomId):
                     wasabi -= 1
                 else:
                     temporalPoints += 3
+        points.append(temporalPoints)
     for i in range(1,len(makiFirst)):
         points[i] += 6 // len(range(1,len(makiFirst)))
     for i in range(1,len(makiSecond)):
@@ -110,6 +111,7 @@ def sendResults(roomId):
     for i in rooms[obj["room_id"]]["players"]:
             users[i]["socket"].send(repr(response).encode("utf-8"))
 
+    #Remove room
 
 def process_message(message, connection): 
     obj = json.loads(message)
