@@ -27,27 +27,89 @@ def generateHands(nArrays, nCards):
 
 def sendResults(roomId):
     points = []
-
+    makiFirst = [-1, 0]
+    makiSecond = [-1, 0]
+    puddingsMost = [-1, 0]
+    puddingsLeast = [-1, 999]
     for i in range(len(rooms[roomId]["decks"])):
-        wassabi = False
         temporalPoints = 0
-        #Chopsticks
+        #Chopsticks -ya
         rooms[roomId]["decks"][i] = list(filter(lambda a: a != 2, rooms[roomId]["decks"][i]))
         #Dumplins
         dumplins = rooms[roomId]["decks"][i].count(8)
         rooms[roomId]["decks"][i] = list(filter(lambda a: a != 8, rooms[roomId]["decks"][i]))
-        #Sashimi
-        sashimi = rooms[roomId]["decks"][i].count(1)
-        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 1, rooms[roomId]["decks"][i]))
-        #Tempura
-        tempura = rooms[roomId]["decks"][i].count(9)
-        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 9, rooms[roomId]["decks"][i]))
-
-
         temporalPoints += dumplins #add conversion to points
+        #Sashimi -ya
+        temporalPoints += (rooms[roomId]["decks"][i].count(1) // 3) * 10 
+        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 1, rooms[roomId]["decks"][i]))
+        #Tempura -ya
+        temporalPoints += (rooms[roomId]["decks"][i].count(9) //2) * 5
+        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 9, rooms[roomId]["decks"][i]))
+        #Maki
+        maki = rooms[roomId]["decks"][i].count(6) + (rooms[roomId]["decks"][i].count(5) * 2) + (rooms[roomId]["decks"][i].count(4) * 3)
+        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 6, rooms[roomId]["decks"][i]))
+        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 5, rooms[roomId]["decks"][i]))
+        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 4, rooms[roomId]["decks"][i]))
+        if (maki == makiFirst[1]):
+            makiFirst.append(i)
+        elif (maki > makiFirst[1]):
+            makiSecond = [makiFirst[0], makiFirst[1]]
+            makiFirst = [i, maki]
+        #pudding
+        pudding = rooms[roomId]["decks"][i].count(3)
+        rooms[roomId]["decks"][i] = list(filter(lambda a: a != 3, rooms[roomId]["decks"][i]))
+        if (pudding == puddingsMost[1]):
+            puddingsMost.append(i)
+        elif (pudding > puddingsMost[1]):
+            puddingsMost = [i, pudding]
+        elif (pudding == puddingsLeast[1]):
+            puddingsLeast.append(i)
+        elif (pudding < puddingsLeast[1]):
+            puddingsLeast = [i, pudding]
+        #Nigiri
+        wasabi = 0
+        for j in rooms[roomId]["decks"][i]:
+            if (j == 7):
+                wasabi += 1
+            elif (j == 10):
+                if (wasabi > 0):
+                    temporalPoints += 2 * 3
+                    wasabi -= 1
+                else:
+                    temporalPoints += 2
+            elif (j == 11):
+                if (wasabi > 0):
+                    temporalPoints += 1 * 3
+                    wasabi -= 1
+                else:
+                    temporalPoints += 1
+            elif (j == 12):
+                if (wasabi > 0):
+                    temporalPoints += 3 * 3
+                    wasabi -= 1
+                else:
+                    temporalPoints += 3
+    for i in range(1,len(makiFirst)):
+        points[i] += 6 // len(range(1,len(makiFirst)))
+    for i in range(1,len(makiSecond)):
+        points[i] += 3 // len(range(1,len(makiSecond)))
+    for i in range(1,len(puddingsMost)):
+        points[i] += 6 // len(range(1,len(puddingsMost)))
+    for i in range(1,len(puddingsLeast)):
+        points[i] -= 6 // len(range(1,len(puddingsLeast)))
+    
+    response = {}
+    response["type"] = 114
+    response["status"] = []
+    for i in range(len(rooms[roomId]["decks"])):
+        obj = {}
+        obj["id"] = rooms[roomId]["players"][i]
+        obj["username"] = users[ rooms[roomId]["players"][i] ]["username"]
+        obj["points"] = points[i] 
+        response["status"].append(obj)
+    for i in rooms[obj["room_id"]]["players"]:
+            users[i]["socket"].send(repr(response).encode("utf-8"))
 
-
-    print("Area en construcción")
 
 def process_message(message, connection): 
     obj = json.loads(message)
