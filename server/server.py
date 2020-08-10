@@ -118,12 +118,14 @@ def process_message(message, connection):
         pos = rooms[obj["room_id"]]["players"].index(obj["user_id"])
         index = pos + rooms[obj["room_id"]]["turn"]
         nPlayers = len(rooms[obj["room_id"]]["players"])
-        print(obj["cards"])
         for i in obj["cards"]:
+            print("Carta: ", i)
             if (i>0):
                 rooms[ obj["room_id"] ]["decks"][ index % nPlayers ].append( abs(i) )
             else:
+                print("Antes", rooms[ obj["room_id"] ]["decks"][ index % nPlayers ])
                 rooms[ obj["room_id"] ]["decks"][ index % nPlayers ].remove(i)
+                print("Despues", rooms[ obj["room_id"] ]["decks"][ index % nPlayers ])
                 rooms[ obj["room_id"] ]["selectedCards"][pos].append(i)
         #Add from receive cards
         rooms[ obj["room_id"] ]["cardsReceived"] += 1
