@@ -35,6 +35,20 @@ class GameManager extends ChangeNotifier {
     11: 'egg_nigiri.png',
     12: 'squid_nigiri.png'
   };
+  final _pointsMap = {
+    1: 'x3=10',
+    2: 'SWAP FOR 2',
+    3: 'MOST 6/LEAST -6',
+    4: 'MOST 6/3',
+    5: 'MOST 6/3',
+    6: 'MOST 6/3',
+    7: 'NEXT NIGIRI x3',
+    8: '1 3 6 10 15',
+    9: 'x2=5',
+    10: '2',
+    11: '1',
+    12: '3',
+  };
 
   List<SushiGoCard> _cards = [];
   final List<SushiGoCard> _ownedCards = [];
@@ -58,19 +72,26 @@ class GameManager extends ChangeNotifier {
     _cards.clear();
     int uid = 0;
 
-    // Future future = Future(() {});
+    Future future = Future(() {});
 
     for (int id in cardIds) {
-      _cards.add(
-        SushiGoCard(
-          id: id,
-          uid: uid,
-          name: _cardsMap[id],
-          img: _imgMap[id],
-        ),
+      final card = SushiGoCard(
+        id: id,
+        uid: uid,
+        name: _cardsMap[id],
+        points: _pointsMap[id],
+        img: _imgMap[id],
       );
       uid++;
+
+      future = future.then((_) {
+        return Future.delayed(Duration(milliseconds: 150), () {
+          _cards.add(card);
+          notifyListeners();
+        });
+      });
     }
+
     _waitingForNextTurn = false;
     notifyListeners();
   }
