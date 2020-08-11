@@ -1,15 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:sushi_go/providers/game_manager.dart';
+import 'package:provider/provider.dart';
 
 class ResultsScreen extends StatelessWidget {
-  const ResultsScreen({Key key}) : super(key: key);
+  final _colors = {
+    1: Color.fromRGBO(201, 176, 55, 100),
+    2: Color.fromRGBO(215, 215, 215, 100),
+    3: Color.fromRGBO(173, 138, 86, 100),
+  };
+
+  ResultsScreen({Key key}) : super(key: key);
+
+  Widget _createResultBox(
+      EdgeInsetsGeometry m, Color c, String t, String n, String p) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        margin: m,
+        width: 200,
+        height: 250,
+        decoration: BoxDecoration(
+          color: c,
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Column(
+          children: [
+            Text(
+              t,
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  n,
+                ),
+              ),
+            ),
+            Text(
+              p,
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TextStyle(
-      // fontFamily: 'Sushi',
-      fontSize: 32,
-      fontWeight: FontWeight.bold,
+    final results = context.read<GameManager>().gameResults;
+
+    final List<Widget> resultsWidget = [];
+    resultsWidget.add(
+      _createResultBox(
+        EdgeInsets.only(bottom: 50, right: 20),
+        _colors[2],
+        '2do Lugar',
+        results[1].name,
+        results[1].points.toString(),
+      ),
     );
+    resultsWidget.add(
+      _createResultBox(
+        EdgeInsets.only(bottom: 200),
+        _colors[1],
+        '1er Lugar',
+        results[0].name,
+        results[0].points.toString(),
+      ),
+    );
+    if (results.length > 2) {
+      resultsWidget.add(
+        _createResultBox(
+          EdgeInsets.only(left: 20),
+          _colors[3],
+          '3er Lugar',
+          results[2].name,
+          results[2].points.toString(),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -20,117 +90,7 @@ class ResultsScreen extends StatelessWidget {
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                margin: const EdgeInsets.only(
-                  bottom: 50,
-                  right: 20,
-                ),
-                width: 200,
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(215, 215, 215, 100),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      '2do Lugar',
-                      style: textStyle,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'Juan',
-                          style: textStyle,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      '15 puntos',
-                      style: textStyle,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                margin: const EdgeInsets.only(
-                  bottom: 200,
-                ),
-                width: 200,
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(201, 176, 55, 100),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      '1er Lugar',
-                      style: textStyle,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'Sebas jeje',
-                          style: textStyle,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      '21 puntos',
-                      style: textStyle,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                margin: const EdgeInsets.only(
-                  left: 20,
-                ),
-                width: 200,
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(173, 138, 86, 100),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      '3er Lugar',
-                      style: textStyle,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'sebdev',
-                          style: textStyle,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      '14 puntos',
-                      style: textStyle,
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
+          children: resultsWidget,
         ),
       ),
     );

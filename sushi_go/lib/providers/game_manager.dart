@@ -12,7 +12,7 @@ class GameManager extends ChangeNotifier {
     2: 'Chopsticks',
     3: 'Pudding',
     4: 'Maki Roll x3',
-    5: 'Maki Roll x3',
+    5: 'Maki Roll x2',
     6: 'Maki Roll x1',
     7: 'Wasabi',
     8: 'Dumplings',
@@ -53,6 +53,7 @@ class GameManager extends ChangeNotifier {
   List<SushiGoCard> _cards = [];
   final List<SushiGoCard> _ownedCards = [];
   final List<SushiGoCard> _currentlySelectedCards = [];
+  final List<PlayerResults> _gameResults = [];
   int _currentTurn = 1;
   bool _waitingForNextTurn = false;
   bool _playerHasChopsticks = false;
@@ -62,6 +63,7 @@ class GameManager extends ChangeNotifier {
   bool get waitingForNextTurn => _waitingForNextTurn;
   bool get gameFinished => _gameFinished;
   bool get hasCardSelected => _currentlySelectedCards.length > 0;
+  List<PlayerResults> get gameResults => List.unmodifiable(_gameResults);
 
   /// constructores
   factory GameManager() {
@@ -160,7 +162,21 @@ class GameManager extends ChangeNotifier {
   void notifyServerReceivedCards() {}
 
   void setWinners(List<dynamic> winners) {
-    winners.forEach((i) {});
+    _gameResults.clear();
+
+    winners.forEach((i) {
+      _gameResults.add(
+        PlayerResults(
+          name: i['name'],
+          points: i['points'],
+        ),
+      );
+    });
+    _gameResults.sort((i, j) {
+      return i.points.compareTo(j.points);
+    });
+
+    gameStarted = false;
     _gameFinished = true;
     notifyListeners();
   }
@@ -219,4 +235,14 @@ class SendCardsMessage extends ClientMessage {
       'cards': cards,
     };
   }
+}
+
+class PlayerResults {
+  final String name;
+  final int points;
+
+  PlayerResults({
+    this.name,
+    this.points,
+  });
 }

@@ -37,7 +37,11 @@ class ClientSocket {
 
   void initialize() {
     print('Client: trying to connect to server...');
-    Socket.connect('127.0.0.1', 65432).then((socket) {
+
+    final ip = '0.tcp.ngrok.io';
+    final port = 16831;
+
+    Socket.connect(ip, port).then((socket) {
       /// Guardar referencia a socket.
       _socket = socket;
 
