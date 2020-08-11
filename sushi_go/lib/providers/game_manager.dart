@@ -44,7 +44,6 @@ class GameManager extends ChangeNotifier {
   bool _playerHasChopsticks = false;
   bool _gameFinished = false;
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
-  List<SushiGoCard> get ownedCards => List.unmodifiable(_ownedCards);
   bool gameStarted = false;
   bool get waitingForNextTurn => _waitingForNextTurn;
   bool get gameFinished => _gameFinished;
@@ -76,8 +75,11 @@ class GameManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  SushiGoCard getCardAtIndex(int index) {
-    return _cards[index];
+  List<SushiGoCard> getOwnedCards() {
+    final List<SushiGoCard> list = List.from(_ownedCards);
+    list.sort((i, j) => i.id.compareTo(j.id));
+
+    return list;
   }
 
   /// Agrega o quita la carta con id cardId a una lista de cartas

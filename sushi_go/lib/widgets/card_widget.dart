@@ -19,7 +19,6 @@ class _CardWidgetState extends State<CardWidget> {
   GameManager _gameManager;
   bool _selected;
   double _elevation = 1.0;
-  double _marginBottom = 0.0;
 
   @override
   void initState() {
@@ -35,7 +34,6 @@ class _CardWidgetState extends State<CardWidget> {
       child: Container(
         width: 200,
         height: 250,
-        margin: EdgeInsets.only(bottom: _marginBottom),
         child: GestureDetector(
           onTap: () {
             _selected = _gameManager.toggleSelectedCard(widget.card);
@@ -46,14 +44,12 @@ class _CardWidgetState extends State<CardWidget> {
             onEnter: (event) {
               setState(() {
                 _elevation = 8.0;
-                _marginBottom = 50.0;
               });
             },
             onExit: (event) {
               if (_selected) return;
               setState(() {
                 _elevation = 1.0;
-                _marginBottom = 0;
               });
             },
             child: Card(

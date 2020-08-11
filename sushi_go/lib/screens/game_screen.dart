@@ -114,7 +114,8 @@ class _GameScreenState extends State<GameScreen> {
               Expanded(
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: gameManager.ownedCards
+                  children: gameManager
+                      .getOwnedCards()
                       .map(
                         (c) => OwnedCardWidget(card: c),
                       )
