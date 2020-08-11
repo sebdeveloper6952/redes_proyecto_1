@@ -61,6 +61,7 @@ class GameManager extends ChangeNotifier {
   bool gameStarted = false;
   bool get waitingForNextTurn => _waitingForNextTurn;
   bool get gameFinished => _gameFinished;
+  bool get hasCardSelected => _currentlySelectedCards.length > 0;
 
   /// constructores
   factory GameManager() {
