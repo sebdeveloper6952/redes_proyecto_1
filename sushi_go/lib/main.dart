@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: '/',
+      initialRoute: '/results',
       onGenerateRoute: FluroRouter.router.generator,
     );
   }

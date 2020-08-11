@@ -115,6 +115,9 @@ class GameManager extends ChangeNotifier {
     /// guardar carta(s) seleccionadas para mostrar
     _ownedCards.addAll(_currentlySelectedCards);
 
+    final t = _currentlySelectedCards.map((c) => '${c.id} - ${c.name}');
+    for (var i in t) print('sending card: $i');
+
     /// limpiar lista de cartas seleccionadas
     _currentlySelectedCards.clear();
 
