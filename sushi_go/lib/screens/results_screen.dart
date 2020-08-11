@@ -6,7 +6,10 @@ class ResultsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = TextStyle(
-        fontFamily: 'Sushi', fontSize: 32, fontWeight: FontWeight.bold);
+      // fontFamily: 'Sushi',
+      fontSize: 32,
+      fontWeight: FontWeight.bold,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -69,6 +72,26 @@ class ResultsScreen extends StatelessWidget {
                     Radius.circular(10),
                   ),
                 ),
+                child: Column(
+                  children: [
+                    Text(
+                      '1er Lugar',
+                      style: textStyle,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'Sebas jeje',
+                          style: textStyle,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '21 puntos',
+                      style: textStyle,
+                    )
+                  ],
+                ),
               ),
             ),
             Align(
@@ -84,6 +107,26 @@ class ResultsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
                   ),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      '3er Lugar',
+                      style: textStyle,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'sebdev',
+                          style: textStyle,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '14 puntos',
+                      style: textStyle,
+                    )
+                  ],
                 ),
               ),
             )

@@ -42,10 +42,12 @@ class GameManager extends ChangeNotifier {
   int _currentTurn = 1;
   bool _waitingForNextTurn = false;
   bool _playerHasChopsticks = false;
+  bool _gameFinished = false;
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
   List<SushiGoCard> get ownedCards => List.unmodifiable(_ownedCards);
   bool gameStarted = false;
   bool get waitingForNextTurn => _waitingForNextTurn;
+  bool get gameFinished => _gameFinished;
 
   /// constructores
   factory GameManager() {
@@ -56,6 +58,9 @@ class GameManager extends ChangeNotifier {
   void setCards(List<dynamic> cardIds) {
     _cards.clear();
     int uid = 0;
+
+    // Future future = Future(() {});
+
     for (int id in cardIds) {
       _cards.add(
         SushiGoCard(
@@ -69,6 +74,10 @@ class GameManager extends ChangeNotifier {
     }
     _waitingForNextTurn = false;
     notifyListeners();
+  }
+
+  SushiGoCard getCardAtIndex(int index) {
+    return _cards[index];
   }
 
   /// Agrega o quita la carta con id cardId a una lista de cartas
@@ -128,6 +137,7 @@ class GameManager extends ChangeNotifier {
 
   void setWinners(List<dynamic> winners) {
     winners.forEach((i) {});
+    _gameFinished = true;
     notifyListeners();
   }
 

@@ -13,9 +13,6 @@ void main() {
   FluroRouter.initialize();
   ClientSocket().initialize();
 
-  // TODO: remove
-  DummyGameDriver();
-
   runApp(
     MultiProvider(
       providers: [
@@ -82,7 +79,7 @@ class MyApp extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: '/results',
+      initialRoute: '/',
       onGenerateRoute: FluroRouter.router.generator,
     );
   }
