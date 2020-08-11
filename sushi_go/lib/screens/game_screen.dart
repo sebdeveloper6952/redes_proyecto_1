@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sushi_go/models/sushi_go_card.dart';
 import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/game_manager.dart';
 import 'package:sushi_go/providers/lobby_provider.dart';
+import 'package:sushi_go/screens/results_screen.dart';
 import 'package:sushi_go/widgets/card_widget.dart';
 import 'package:badges/badges.dart';
 import 'package:sushi_go/widgets/chat_widget.dart';
@@ -22,6 +22,8 @@ class _GameScreenState extends State<GameScreen> {
   GameManager _gameManager;
   LobbyProvider _lobbyProvider;
   ChatProvider _chatProvider;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  final List<Widget> _listItems = [];
 
   /// enviar carta(s) seleccionada(s) a servidor
   void _sendCards() {
@@ -34,6 +36,10 @@ class _GameScreenState extends State<GameScreen> {
     _gameManager = context.read<GameManager>();
     _lobbyProvider = context.read<LobbyProvider>();
     _chatProvider = context.read<ChatProvider>();
+  }
+
+  Widget _createResultsWidget(GameManager gameManager) {
+    return ResultsScreen();
   }
 
   @override
@@ -106,23 +112,114 @@ class _GameScreenState extends State<GameScreen> {
           Column(
             children: [
               Expanded(
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: gameManager.ownedCards
-                      .map(
-                        (c) => OwnedCardWidget(card: c),
-                      )
-                      .toList(),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.redAccent,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                          top: 16,
+                          left: 16,
+                        ),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'MIS CARTAS',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: gameManager
+                              .getOwnedCards()
+                              .map(
+                                (c) => OwnedCardWidget(card: c),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: gameManager.cards
-                      .map(
-                        (c) => CardWidget(card: c),
-                      )
-                      .toList(),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.redAccent,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                          top: 16,
+                          left: 16,
+                        ),
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(
+                                right: 16,
+                              ),
+                              child: Text(
+                                'TURNO ACTUAL',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                            RaisedButton(
+                              onPressed: _gameManager.hasCardSelected
+                                  ? _sendCards
+                                  : null,
+                              child: Text(
+                                'ESCOGER CARTA',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: gameManager.cards
+                              .map(
+                                (c) => CardWidget(card: c),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -136,10 +233,6 @@ class _GameScreenState extends State<GameScreen> {
       appBar: AppBar(
         title: Text('Cuarto: ${_lobbyProvider.roomId}'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.autorenew),
-            onPressed: () => _sendCards(),
-          ),
           Consumer<ChatProvider>(
             builder: (context, chatProvider, widget) {
               final icon = chatProvider.pendingMessagesCount == 0
@@ -170,6 +263,8 @@ class _GameScreenState extends State<GameScreen> {
         builder: (context, gameManager, lobbyProvider, widget) {
           if (gameManager.gameStarted) {
             return _createGameWidget(gameManager);
+          } else if (gameManager.gameFinished) {
+            return _createResultsWidget(gameManager);
           } else {
             return _createWaitingRoomWidget(lobbyProvider);
           }

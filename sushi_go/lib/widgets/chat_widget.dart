@@ -111,6 +111,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                   child: TextField(
                     textInputAction: TextInputAction.go,
                     controller: _textFieldController,
+                    decoration: InputDecoration(
+                      hintText: 'Escribe un mensaje para todos...',
+                    ),
                     onChanged: (val) {
                       _message = val;
                     },

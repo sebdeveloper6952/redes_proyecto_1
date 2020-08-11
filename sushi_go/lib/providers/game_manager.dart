@@ -11,9 +11,9 @@ class GameManager extends ChangeNotifier {
     1: 'Sashimi',
     2: 'Chopsticks',
     3: 'Pudding',
-    4: '3x Maki Roll',
-    5: '2x Maki Roll',
-    6: '1x Maki Roll',
+    4: 'Maki Roll x3',
+    5: 'Maki Roll x2',
+    6: 'Maki Roll x1',
     7: 'Wasabi',
     8: 'Dumplings',
     9: 'Tempura',
@@ -35,17 +35,35 @@ class GameManager extends ChangeNotifier {
     11: 'egg_nigiri.png',
     12: 'squid_nigiri.png'
   };
+  final _pointsMap = {
+    1: 'x3=10',
+    2: 'SWAP FOR 2',
+    3: 'MOST 6/LEAST -6',
+    4: 'MOST 6/3',
+    5: 'MOST 6/3',
+    6: 'MOST 6/3',
+    7: 'NEXT NIGIRI x3',
+    8: '1 3 6 10 15',
+    9: 'x2=5',
+    10: '2',
+    11: '1',
+    12: '3',
+  };
 
   List<SushiGoCard> _cards = [];
   final List<SushiGoCard> _ownedCards = [];
   final List<SushiGoCard> _currentlySelectedCards = [];
+  final List<PlayerResults> _gameResults = [];
   int _currentTurn = 1;
   bool _waitingForNextTurn = false;
   bool _playerHasChopsticks = false;
+  bool _gameFinished = false;
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
-  List<SushiGoCard> get ownedCards => List.unmodifiable(_ownedCards);
   bool gameStarted = false;
   bool get waitingForNextTurn => _waitingForNextTurn;
+  bool get gameFinished => _gameFinished;
+  bool get hasCardSelected => _currentlySelectedCards.length > 0;
+  List<PlayerResults> get gameResults => List.unmodifiable(_gameResults);
 
   /// constructores
   factory GameManager() {
@@ -56,19 +74,36 @@ class GameManager extends ChangeNotifier {
   void setCards(List<dynamic> cardIds) {
     _cards.clear();
     int uid = 0;
+
+    Future future = Future(() {});
+
     for (int id in cardIds) {
-      _cards.add(
-        SushiGoCard(
-          id: id,
-          uid: uid,
-          name: _cardsMap[id],
-          img: _imgMap[id],
-        ),
+      final card = SushiGoCard(
+        id: id,
+        uid: uid,
+        name: _cardsMap[id],
+        points: _pointsMap[id],
+        img: _imgMap[id],
       );
       uid++;
+
+      future = future.then((_) {
+        return Future.delayed(Duration(milliseconds: 150), () {
+          _cards.add(card);
+          notifyListeners();
+        });
+      });
     }
+
     _waitingForNextTurn = false;
     notifyListeners();
+  }
+
+  List<SushiGoCard> getOwnedCards() {
+    final List<SushiGoCard> list = List.from(_ownedCards);
+    list.sort((i, j) => i.id.compareTo(j.id));
+
+    return list;
   }
 
   /// Agrega o quita la carta con id cardId a una lista de cartas
@@ -115,6 +150,9 @@ class GameManager extends ChangeNotifier {
     /// guardar carta(s) seleccionadas para mostrar
     _ownedCards.addAll(_currentlySelectedCards);
 
+    final t = _currentlySelectedCards.map((c) => '${c.id} - ${c.name}');
+    for (var i in t) print('sending card: $i');
+
     /// limpiar lista de cartas seleccionadas
     _currentlySelectedCards.clear();
 
@@ -124,7 +162,22 @@ class GameManager extends ChangeNotifier {
   void notifyServerReceivedCards() {}
 
   void setWinners(List<dynamic> winners) {
-    winners.forEach((i) {});
+    _gameResults.clear();
+
+    winners.forEach((i) {
+      _gameResults.add(
+        PlayerResults(
+          name: i['name'],
+          points: i['points'],
+        ),
+      );
+    });
+    _gameResults.sort((i, j) {
+      return i.points.compareTo(j.points);
+    });
+
+    gameStarted = false;
+    _gameFinished = true;
     notifyListeners();
   }
 
@@ -182,4 +235,14 @@ class SendCardsMessage extends ClientMessage {
       'cards': cards,
     };
   }
+}
+
+class PlayerResults {
+  final String name;
+  final int points;
+
+  PlayerResults({
+    this.name,
+    this.points,
+  });
 }

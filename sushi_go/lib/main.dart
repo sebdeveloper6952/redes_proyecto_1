@@ -13,9 +13,6 @@ void main() {
   FluroRouter.initialize();
   ClientSocket().initialize();
 
-  // TODO: remove
-  DummyGameDriver();
-
   runApp(
     MultiProvider(
       providers: [

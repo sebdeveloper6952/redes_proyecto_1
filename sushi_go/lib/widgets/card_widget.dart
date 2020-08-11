@@ -54,20 +54,39 @@ class _CardWidgetState extends State<CardWidget> {
             },
             child: Card(
               elevation: _elevation,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
               color: _selected ? Colors.greenAccent : Colors.redAccent,
               child: Column(
                 children: [
-                  Text(
-                    widget.card.name,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                   Expanded(
                     child: Image.asset('assets/img/${widget.card.img}'),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(9),
+                        bottomRight: Radius.circular(9),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          widget.card.name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(widget.card.points),
+                      ],
+                    ),
                   ),
                 ],
               ),
