@@ -115,7 +115,7 @@ class ClientSocket {
         GameManager().setCards(cardIds);
       } else if (serverMessage.type == SERVER_CARDS_RECEIVED) {
         /// notificar a game manager de que cartas fueron recibidas.
-        GameManager().notifyServerReceivedCards();
+        // GameManager().notifyServerReceivedCards();
       } else if (serverMessage.type == SERVER_GAME_FINISH) {
         // server responde que juego ha terminado
         final List<dynamic> gameStatus = messageJsonMap['status'] ?? [];
