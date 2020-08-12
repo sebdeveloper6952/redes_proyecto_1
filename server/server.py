@@ -130,8 +130,7 @@ def sendResults(roomId):
         response["status"].append(obj)
     for i in rooms[roomId]["players"]:
             users[i]["socket"].send(repr(response).encode("utf-8"))
-
-    #Remove room
+    del rooms[roomId] #Remove room
 
 def process_message(message, connection): 
     obj = json.loads(message)
