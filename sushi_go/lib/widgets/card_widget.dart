@@ -36,6 +36,7 @@ class _CardWidgetState extends State<CardWidget> {
         height: 250,
         child: GestureDetector(
           onTap: () {
+            if (_gameManager.waitingForNextTurn) return;
             _selected = _gameManager.toggleSelectedCard(widget.card);
             _elevation = _selected ? 8.0 : 1.0;
             setState(() {});

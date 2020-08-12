@@ -57,11 +57,10 @@ class GameManager extends ChangeNotifier {
   int _currentTurn = 1;
   bool _waitingForNextTurn = false;
   bool _playerHasChopsticks = false;
-  bool _gameFinished = false;
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
   bool gameStarted = false;
+  bool gameFinished = false;
   bool get waitingForNextTurn => _waitingForNextTurn;
-  bool get gameFinished => _gameFinished;
   bool get hasCardSelected => _currentlySelectedCards.length > 0;
   List<PlayerResults> get gameResults => List.unmodifiable(_gameResults);
 
@@ -71,6 +70,7 @@ class GameManager extends ChangeNotifier {
   }
   GameManager._internal();
 
+  /// Define el maso del jugador para un turno.
   void setCards(List<dynamic> cardIds) {
     _cards.clear();
     int uid = 0;
@@ -131,6 +131,7 @@ class GameManager extends ChangeNotifier {
     return selected;
   }
 
+  /// Retorna true si la carta esta dentro las cartas seleccionadas.
   bool isCardSelected(SushiGoCard card) {
     return _currentlySelectedCards.contains(card);
   }
@@ -141,10 +142,24 @@ class GameManager extends ChangeNotifier {
   void chooseCardsForTurn() {
     _waitingForNextTurn = true;
 
+    /// ids de cartas seleccionadas que se envian a servidor
+    final ids = _currentlySelectedCards.map((c) => c.id).toList();
+
+    /// Los chopsticks se mandan como "-2", y se mandan las otras 2 cartas.
+    /// Se remueven los chopsticks de las cartas escogidas por el jugador.
+    if (_playerHasChopsticks) {
+      ids.add(-2);
+      final chopsticksCard = _ownedCards.firstWhere(
+        (card) => card.id == 2,
+        orElse: () => null,
+      );
+      if (chopsticksCard != null) _ownedCards.remove(chopsticksCard);
+      _playerHasChopsticks = false;
+      print('chopsticks se retornaron al maso');
+    }
+
     ClientSocket().writeToSocket(
-      SendCardsMessage(
-        cards: _currentlySelectedCards.map((c) => c.id).toList(),
-      ),
+      SendCardsMessage(cards: ids),
     );
 
     /// guardar carta(s) seleccionadas para mostrar
@@ -159,7 +174,12 @@ class GameManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  void notifyServerReceivedCards() {}
+  /// Accion especial de la carta "Chopsticks"
+  void activateChopsticks() {
+    print('chopsticks activados');
+    _playerHasChopsticks = true;
+    notifyListeners();
+  }
 
   void setWinners(List<dynamic> winners) {
     _gameResults.clear();
@@ -167,17 +187,17 @@ class GameManager extends ChangeNotifier {
     winners.forEach((i) {
       _gameResults.add(
         PlayerResults(
-          name: i['name'],
+          name: i['username'],
           points: i['points'],
         ),
       );
     });
     _gameResults.sort((i, j) {
-      return i.points.compareTo(j.points);
+      return -(i.points.compareTo(j.points));
     });
 
     gameStarted = false;
-    _gameFinished = true;
+    gameFinished = true;
     notifyListeners();
   }
 

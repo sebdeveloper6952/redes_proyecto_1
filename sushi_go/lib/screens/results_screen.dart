@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sushi_go/providers/game_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:sushi_go/providers/lobby_provider.dart';
+import 'package:sushi_go/router.dart';
 
 class ResultsScreen extends StatelessWidget {
   final _colors = {
@@ -48,7 +50,7 @@ class ResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final results = context.read<GameManager>().gameResults;
+    final results = context.watch<GameManager>().gameResults;
 
     final List<Widget> resultsWidget = [];
     resultsWidget.add(
@@ -86,6 +88,23 @@ class ResultsScreen extends StatelessWidget {
         leading: Container(),
         centerTitle: true,
         title: Text('Resultados'),
+        actions: [
+          FlatButton.icon(
+            onPressed: () {
+              context.read<LobbyProvider>().returnToLobby();
+            },
+            icon: Icon(
+              Icons.home,
+              color: Colors.white,
+            ),
+            label: Text(
+              'Volver al Lobby',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: Row(

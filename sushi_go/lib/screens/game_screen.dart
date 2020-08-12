@@ -195,7 +195,8 @@ class _GameScreenState extends State<GameScreen> {
                               ),
                             ),
                             RaisedButton(
-                              onPressed: _gameManager.hasCardSelected
+                              onPressed: (_gameManager.hasCardSelected &&
+                                      !_gameManager.waitingForNextTurn)
                                   ? _sendCards
                                   : null,
                               child: Text(
@@ -229,47 +230,78 @@ class _GameScreenState extends State<GameScreen> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Cuarto: ${_lobbyProvider.roomId}'),
-        actions: [
-          Consumer<ChatProvider>(
-            builder: (context, chatProvider, widget) {
-              final icon = chatProvider.pendingMessagesCount == 0
-                  ? Icon(Icons.chat_bubble_outline)
-                  : Badge(
-                      badgeColor: Colors.white,
-                      badgeContent: Text(
-                        chatProvider.pendingMessagesCount.toString(),
-                      ),
-                      child: Icon(Icons.chat_bubble_outline),
-                    );
+    return Consumer2<GameManager, LobbyProvider>(
+      builder: (context, gameManager, lobbyProvider, widget) {
+        if (gameManager.gameStarted) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Cuarto: ${_lobbyProvider.roomId}'),
+              actions: [
+                Consumer<ChatProvider>(
+                  builder: (context, chatProvider, widget) {
+                    final icon = chatProvider.pendingMessagesCount == 0
+                        ? Icon(Icons.chat_bubble_outline)
+                        : Badge(
+                            badgeColor: Colors.white,
+                            badgeContent: Text(
+                              chatProvider.pendingMessagesCount.toString(),
+                            ),
+                            child: Icon(Icons.chat_bubble_outline),
+                          );
 
-              return IconButton(
-                icon: icon,
-                onPressed: () {
-                  _chatProvider.resetMessagesPendingCount();
-                  showDialog(
-                    context: context,
-                    builder: (_) => ChatWidget(),
-                  );
-                },
-              );
-            },
-          )
-        ],
-      ),
-      body: Consumer2<GameManager, LobbyProvider>(
-        builder: (context, gameManager, lobbyProvider, widget) {
-          if (gameManager.gameStarted) {
-            return _createGameWidget(gameManager);
-          } else if (gameManager.gameFinished) {
-            return _createResultsWidget(gameManager);
-          } else {
-            return _createWaitingRoomWidget(lobbyProvider);
-          }
-        },
-      ),
+                    return IconButton(
+                      icon: icon,
+                      onPressed: () {
+                        _chatProvider.resetMessagesPendingCount();
+                        showDialog(
+                          context: context,
+                          builder: (_) => ChatWidget(),
+                        );
+                      },
+                    );
+                  },
+                )
+              ],
+            ),
+            body: _createGameWidget(gameManager),
+          );
+        } else if (gameManager.gameFinished) {
+          return _createResultsWidget(gameManager);
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Cuarto: ${_lobbyProvider.roomId}'),
+              actions: [
+                Consumer<ChatProvider>(
+                  builder: (context, chatProvider, widget) {
+                    final icon = chatProvider.pendingMessagesCount == 0
+                        ? Icon(Icons.chat_bubble_outline)
+                        : Badge(
+                            badgeColor: Colors.white,
+                            badgeContent: Text(
+                              chatProvider.pendingMessagesCount.toString(),
+                            ),
+                            child: Icon(Icons.chat_bubble_outline),
+                          );
+
+                    return IconButton(
+                      icon: icon,
+                      onPressed: () {
+                        _chatProvider.resetMessagesPendingCount();
+                        showDialog(
+                          context: context,
+                          builder: (_) => ChatWidget(),
+                        );
+                      },
+                    );
+                  },
+                )
+              ],
+            ),
+            body: _createWaitingRoomWidget(lobbyProvider),
+          );
+        }
+      },
     );
   }
 }
