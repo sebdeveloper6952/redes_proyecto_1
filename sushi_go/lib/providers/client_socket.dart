@@ -38,15 +38,19 @@ class ClientSocket {
   void initialize() {
     print('Client: trying to connect to server...');
 
-    final ip = '0.tcp.ngrok.io';
-    final port = 16831;
+    // final ip = '2.tcp.ngrok.io';
+    // final port = 15117;
+
+    final ip = '127.0.0.1';
+    final port = 65432;
 
     Socket.connect(ip, port).then((socket) {
       /// Guardar referencia a socket.
       _socket = socket;
 
       print(
-          'Client: connected to: ${socket.remoteAddress.address}:${socket.remotePort}');
+        'Client: connected to: ${socket.remoteAddress.address}:${socket.remotePort}',
+      );
 
       /// definir callbacks para los eventos onData, onDone, onError.
       socket.listen(_socketOnData,

@@ -62,6 +62,13 @@ class LobbyProvider extends ChangeNotifier {
     ClientSocket().writeToSocket(StartGameMessage());
     GameManager().setGameStarted(true);
   }
+
+  void returnToLobby() {
+    _joinedRoom = false;
+    GameManager().gameStarted = false;
+    GameManager().gameFinished = false;
+    notifyListeners();
+  }
 }
 
 class CreateRoomMessage extends ClientMessage {

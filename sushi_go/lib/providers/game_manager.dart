@@ -57,11 +57,10 @@ class GameManager extends ChangeNotifier {
   int _currentTurn = 1;
   bool _waitingForNextTurn = false;
   bool _playerHasChopsticks = false;
-  bool _gameFinished = false;
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
   bool gameStarted = false;
+  bool gameFinished = false;
   bool get waitingForNextTurn => _waitingForNextTurn;
-  bool get gameFinished => _gameFinished;
   bool get hasCardSelected => _currentlySelectedCards.length > 0;
   List<PlayerResults> get gameResults => List.unmodifiable(_gameResults);
 
@@ -167,17 +166,17 @@ class GameManager extends ChangeNotifier {
     winners.forEach((i) {
       _gameResults.add(
         PlayerResults(
-          name: i['name'],
+          name: i['username'],
           points: i['points'],
         ),
       );
     });
     _gameResults.sort((i, j) {
-      return i.points.compareTo(j.points);
+      return -(i.points.compareTo(j.points));
     });
 
     gameStarted = false;
-    _gameFinished = true;
+    gameFinished = true;
     notifyListeners();
   }
 
