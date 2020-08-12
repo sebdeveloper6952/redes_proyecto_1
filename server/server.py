@@ -7,9 +7,12 @@ import numpy as np
 
 HOST = '127.0.0.1'  # localHOST
 PORT = 65432        # Port
-
+#diccionaries
 rooms = {}
 users = {}
+#counters
+roomsC = 0
+usersC = 0
 #Create deck
 deck = np.concatenate((np.ones(14), np.ones(4) * 2 , np.ones(10) * 3, np.ones(8) * 4
                 , np.ones(12) * 5, np.ones(6) * 6, np.ones(6) * 7, np.ones(14) * 8
@@ -133,13 +136,15 @@ def sendResults(roomId):
     del rooms[roomId] #Remove room
 
 def process_message(message, connection): 
+    global usersC
     obj = json.loads(message)
     response =	{
         "type": 0
     }
     if (obj["type"] == 101): #101 Login
         #Generate user id
-        userId = len(users)
+        userId = usersC
+        usersC += 1
         #Add user to list
         users[userId] =  { #id
             "username": obj["username"],
@@ -149,8 +154,10 @@ def process_message(message, connection):
         response["type"] = 102
         response["user_id"] = userId
     elif (obj["type"] == 104): #104 Create room
+        global roomsC
         #Generate room id
-        roomsId = len(rooms)
+        roomsId = roomsC
+        roomsC += 1
         #Add room to list
         rooms[roomsId] =  { # room
             "players": [obj["user_id"]], #players playing on the romm,
@@ -247,12 +254,21 @@ def process_message(message, connection):
         for i in rooms[obj["room_id"]]["players"]:
             if (obj["user_id"] != i):
                 users[i]["socket"].send(repr(response).encode("utf-8"))
+        response = None
+    elif (obj["type"] == 202): #202 kill room
+        response["type"] = 203
+        for i in rooms[obj["room_id"]]["players"]:
+            users[i]["socket"].send(repr(response).encode("utf-8"))
+        del rooms[obj["room_id"]] #Remove room
+        process_message('{"type": 204, "user_id":'+str(obj["user_id"]) +'}', None)
+        response = None
+    elif (obj["type"] == 204): #202 kill room
+        socket = users[obj["user_id"]]["socket"]
+        sel.unregister(socket)
+        socket.close()
+        del users[obj["user_id"]] #Remove room
+        response = None
     return response
-
-#
-
-#a = a.astype(int)
-#print( process_message('{"type":106,"id":1, "room_id":1}', None) )   
 
 def accept_wrapper(sock):
     conn, addr = sock.accept()  # Aceptar la conexion
@@ -270,7 +286,7 @@ def service_connection(key, mask):
         if recv_data: #Si leemos algo´
             data.outb += recv_data
         else: #el cliente cerro su sokcet
-            #print('closing connection to', data.addr)
+            print('closing connection to', data.addr)
             sel.unregister(sock)
             sock.close()
     if mask & selectors.EVENT_WRITE: #El socket esta listo para escribir
