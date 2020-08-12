@@ -195,7 +195,8 @@ class _GameScreenState extends State<GameScreen> {
                               ),
                             ),
                             RaisedButton(
-                              onPressed: _gameManager.hasCardSelected
+                              onPressed: (_gameManager.hasCardSelected &&
+                                      !_gameManager.waitingForNextTurn)
                                   ? _sendCards
                                   : null,
                               child: Text(
