@@ -212,6 +212,15 @@ class GameManager extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void leaveGame() {
+    _currentTurn = 1;
+    _playerHasChopsticks = false;
+    _waitingForNextTurn = false;
+    gameStarted = false;
+    gameFinished = false;
+    notifyListeners();
+  }
 }
 
 class ClientCardsRequest extends ClientMessage {
