@@ -24,5 +24,4 @@ class LobbyProvider extends ChangeNotifier {
   factory LobbyProvider() {
     return _instance;
   }
-
 }

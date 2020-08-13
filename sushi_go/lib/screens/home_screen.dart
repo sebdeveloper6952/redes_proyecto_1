@@ -73,6 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Container(
+                child: Image.asset('assets/img/logo.png'),
+              ),
               Text('Hola! Ingresa tu nombre:'),
               Container(
                 margin: const EdgeInsets.only(
@@ -122,6 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Container(
+                child: Image.asset('assets/img/logo.png'),
+              ),
               Container(
                 margin: const EdgeInsets.symmetric(
                   vertical: 8.0,
@@ -196,20 +202,20 @@ class FirstRoute extends StatelessWidget {
       body: Center(
         child: Container(
           width: 200,
-            child: RaisedButton(
-              child: Text(
-                'INSTRUCCIONES',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+          child: RaisedButton(
+            child: Text(
+              'INSTRUCCIONES',
+              style: TextStyle(
+                color: Colors.white,
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SecondRoute()),
-                );
-              },
             ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SecondRoute()),
+              );
+            },
+          ),
         ),
       ),
     );
