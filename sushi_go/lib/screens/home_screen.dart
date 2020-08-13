@@ -119,6 +119,23 @@ class _HomeScreenState extends State<HomeScreen> {
     final lobbyWidget = Scaffold(
       appBar: AppBar(
         title: Text('Lobby'),
+        actions: [
+          FlatButton.icon(
+            onPressed: () {
+              _lobbyProvider.playerExitApp();
+            },
+            icon: Icon(
+              Icons.exit_to_app,
+              color: Colors.white,
+            ),
+            label: Text(
+              'Salir',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: Container(

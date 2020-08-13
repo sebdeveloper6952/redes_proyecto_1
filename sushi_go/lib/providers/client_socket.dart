@@ -24,6 +24,9 @@ class ClientSocket {
   static const int SERVER_PLAYER_JOINED_ROOM = 115;
   static const int CLIENT_SEND_CHAT_MESSAGE = 200;
   static const int CLIENT_RECV_CHAT_MESSAGE = 201;
+  static const int CLIENT_LEAVE_GAME = 202;
+  static const int SERVER_PLAYER_LEFT_ROOM = 203;
+  static const int CLIENT_LEAVE_APP = 204;
   Socket _socket;
 
   // singleton and constructor
@@ -130,6 +133,8 @@ class ClientSocket {
         final userId = messageJsonMap['user_id'] ?? -1;
         final username = messageJsonMap['username'] ?? '';
         ChatProvider().messageReceived(userId, username, message);
+      } else if (serverMessage.type == SERVER_PLAYER_LEFT_ROOM) {
+        LobbyProvider().notifyPlayerLeftRoom();
       }
     }
   }
@@ -146,6 +151,11 @@ class ClientSocket {
     final Map<String, dynamic> jsonMessage = message.toJson();
     final String stringMessage = json.encode(jsonMessage);
     _socket?.write(stringMessage);
+
+    if (message.type == CLIENT_LEAVE_APP) {
+      _socket.close();
+      exit(0);
+    }
   }
 }
 
