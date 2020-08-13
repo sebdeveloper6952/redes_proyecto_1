@@ -67,7 +67,7 @@ class _CardWidgetState extends State<CardWidget> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                      color: Colors.grey[400],
+                      color: Colors.grey[600],
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(9),
                         bottomRight: Radius.circular(9),
@@ -80,12 +80,21 @@ class _CardWidgetState extends State<CardWidget> {
                           widget.card.name,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
+                            fontFamily: 'Dessert',
+                            fontSize: 22,
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(widget.card.points),
+                        Text(
+                          widget.card.points,
+                          style: TextStyle(
+                            fontFamily: 'Dessert',
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
                   ),
