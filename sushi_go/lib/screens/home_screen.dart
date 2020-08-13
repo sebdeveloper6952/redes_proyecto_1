@@ -12,6 +12,13 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+void main() {
+  runApp(MaterialApp(
+    title: 'Navigation Basics',
+    home: FirstRoute(),
+  ));
+}
+
 class _HomeScreenState extends State<HomeScreen> {
   UserProvider _userProvider;
   LobbyProvider _lobbyProvider;
@@ -142,6 +149,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+              Container(
+                margin: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                ),
+                width: 200,
+                child: RaisedButton(
+                  child: Text(
+                    'INSTRUCCIONES',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SecondRoute()),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -158,6 +185,60 @@ class _HomeScreenState extends State<HomeScreen> {
           return usernameWidget;
         }
       },
+    );
+  }
+}
+
+class FirstRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Container(
+          width: 200,
+            child: RaisedButton(
+              child: Text(
+                'INSTRUCCIONES',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SecondRoute()),
+                );
+              },
+            ),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Align(
+        alignment: Alignment(0, 8),
+        child: Container(
+          margin: const EdgeInsets.symmetric(
+            vertical: 300.0,
+          ),
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'REGRESAR',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
