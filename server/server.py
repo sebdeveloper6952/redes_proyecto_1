@@ -260,9 +260,9 @@ def process_message(message, connection):
         for i in rooms[obj["room_id"]]["players"]:
             users[i]["socket"].send(repr(response).encode("utf-8"))
         del rooms[obj["room_id"]] #Remove room
-        process_message('{"type": 204, "user_id":'+str(obj["user_id"]) +'}', None)
+        #process_message('{"type": 204, "user_id":'+str(obj["user_id"]) +'}', None)
         response = None
-    elif (obj["type"] == 204): #202 kill room
+    elif (obj["type"] == 204): #202 kill person
         socket = users[obj["user_id"]]["socket"]
         sel.unregister(socket)
         socket.close()
