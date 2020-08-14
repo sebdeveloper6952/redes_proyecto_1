@@ -52,14 +52,14 @@ class ClientSocket {
       _socket = socket;
 
       print(
-        'Client: connected to: ${socket.remoteAddress.address}:${socket.remotePort}',
+        'connected to: ${socket.remoteAddress.address}:${socket.remotePort}',
       );
 
       /// definir callbacks para los eventos onData, onDone, onError.
       socket.listen(_socketOnData,
           onDone: _socketOnDone, onError: _socketOnError);
     }).catchError((Object error) {
-      print('Client: error connecting to server.');
+      print('error connecting to server.');
     });
   }
 
@@ -141,7 +141,7 @@ class ClientSocket {
 
   void _socketOnDone() {
     _socket.destroy();
-    print('Client: server closed connection.');
+    print('server closed connection.');
   }
 
   void _socketOnError(Object error) {}

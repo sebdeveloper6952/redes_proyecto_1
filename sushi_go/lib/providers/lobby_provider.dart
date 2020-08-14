@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sushi_go/models/player_model.dart';
+import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/client_socket.dart';
 import 'package:sushi_go/providers/game_manager.dart';
 import 'package:sushi_go/providers/user_provider.dart';
@@ -73,11 +74,12 @@ class LobbyProvider extends ChangeNotifier {
   void playerExitGame() {
     _joinedRoom = false;
     _playerCreatedRoom = false;
-    _roomId = -1;
+    _roomPlayers.clear();
     GameManager().leaveGame();
-
-    notifyListeners();
+    ChatProvider().resetMessages();
     ClientSocket().writeToSocket(LeaveGameMessage());
+    _roomId = -1;
+    notifyListeners();
   }
 
   void playerExitApp() {
