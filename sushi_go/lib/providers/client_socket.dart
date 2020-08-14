@@ -41,11 +41,11 @@ class ClientSocket {
   void initialize() {
     print('Client: trying to connect to server...');
 
-    // final ip = '2.tcp.ngrok.io';
-    // final port = 15117;
+    final ip = '0.tcp.ngrok.io';
+    final port = 15593;
 
-    final ip = '127.0.0.1';
-    final port = 65432;
+    // final ip = '127.0.0.1';
+    // final port = 65432;
 
     Socket.connect(ip, port).then((socket) {
       /// Guardar referencia a socket.
@@ -124,6 +124,7 @@ class ClientSocket {
         final List<dynamic> gameStatus = messageJsonMap['status'] ?? [];
         // notificar a game manager de los puntajes
         GameManager().setWinners(gameStatus);
+        LobbyProvider().notifyGameFinished();
       } else if (serverMessage.type == SERVER_PLAYER_JOINED_ROOM) {
         final playersMap = messageJsonMap['players'] ?? [];
         LobbyProvider().setRoomPlayers(playersMap);

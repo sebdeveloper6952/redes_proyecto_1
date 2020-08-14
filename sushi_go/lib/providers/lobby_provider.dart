@@ -93,6 +93,13 @@ class LobbyProvider extends ChangeNotifier {
     _roomId = -1;
     notifyListeners();
   }
+
+  void notifyGameFinished() {
+    _roomPlayers.clear();
+    _joinedRoom = false;
+    _playerCreatedRoom = false;
+    notifyListeners();
+  }
 }
 
 class CreateRoomMessage extends ClientMessage {

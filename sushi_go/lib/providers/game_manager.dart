@@ -196,6 +196,9 @@ class GameManager extends ChangeNotifier {
       return -(i.points.compareTo(j.points));
     });
 
+    _ownedCards.clear();
+    _currentlySelectedCards.clear();
+
     gameStarted = false;
     gameFinished = true;
     notifyListeners();
