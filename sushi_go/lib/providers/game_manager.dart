@@ -207,7 +207,13 @@ class GameManager extends ChangeNotifier {
       return -(i.points.compareTo(j.points));
     });
 
-    _resetState();
+    _currentTurn = 1;
+    _playerHasChopsticks = false;
+    _waitingForNextTurn = false;
+    gameStarted = false;
+    gameFinished = true;
+    _ownedCards.clear();
+    _currentlySelectedCards.clear();
     notifyListeners();
   }
 

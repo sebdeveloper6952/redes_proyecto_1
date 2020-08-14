@@ -65,7 +65,9 @@ class LobbyProvider extends ChangeNotifier {
   }
 
   void returnToLobby() {
+    _roomPlayers.clear();
     _joinedRoom = false;
+    _playerCreatedRoom = false;
     GameManager().gameStarted = false;
     GameManager().gameFinished = false;
     notifyListeners();
@@ -91,13 +93,6 @@ class LobbyProvider extends ChangeNotifier {
     _joinedRoom = false;
     _playerCreatedRoom = false;
     _roomId = -1;
-    notifyListeners();
-  }
-
-  void notifyGameFinished() {
-    _roomPlayers.clear();
-    _joinedRoom = false;
-    _playerCreatedRoom = false;
     notifyListeners();
   }
 }
