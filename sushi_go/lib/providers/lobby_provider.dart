@@ -69,6 +69,28 @@ class LobbyProvider extends ChangeNotifier {
     GameManager().gameFinished = false;
     notifyListeners();
   }
+
+  void playerExitGame() {
+    _joinedRoom = false;
+    _playerCreatedRoom = false;
+    _roomId = -1;
+    GameManager().leaveGame();
+
+    notifyListeners();
+    ClientSocket().writeToSocket(LeaveGameMessage());
+  }
+
+  void playerExitApp() {
+    notifyListeners();
+    ClientSocket().writeToSocket(LeaveAppMessage());
+  }
+
+  void notifyPlayerLeftRoom() {
+    _joinedRoom = false;
+    _playerCreatedRoom = false;
+    _roomId = -1;
+    notifyListeners();
+  }
 }
 
 class CreateRoomMessage extends ClientMessage {
@@ -108,6 +130,34 @@ class StartGameMessage extends ClientMessage {
     return {
       'type': type,
       'room_id': roomId,
+    };
+  }
+}
+
+class LeaveGameMessage extends ClientMessage {
+  final int type = ClientSocket.CLIENT_LEAVE_GAME;
+  final int userId = UserProvider().userId;
+  final int roomId = LobbyProvider().roomId;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'user_id': userId,
+      'room_id': roomId,
+    };
+  }
+}
+
+class LeaveAppMessage extends ClientMessage {
+  final int type = ClientSocket.CLIENT_LEAVE_APP;
+  final int userId = UserProvider().userId;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'user_id': userId,
     };
   }
 }
