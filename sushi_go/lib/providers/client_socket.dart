@@ -41,8 +41,8 @@ class ClientSocket {
   void initialize() {
     print('Client: trying to connect to server...');
 
-    final ip = '0.tcp.ngrok.io';
-    final port = 15593;
+    final ip = '2.tcp.ngrok.io';
+    final port = 12378;
 
     // final ip = '127.0.0.1';
     // final port = 65432;
@@ -136,6 +136,7 @@ class ClientSocket {
         ChatProvider().messageReceived(userId, username, message);
       } else if (serverMessage.type == SERVER_PLAYER_LEFT_ROOM) {
         LobbyProvider().notifyPlayerLeftRoom();
+        GameManager().notifyPlayerLeftRoom();
       }
     }
   }

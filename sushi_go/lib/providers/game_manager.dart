@@ -181,6 +181,17 @@ class GameManager extends ChangeNotifier {
     notifyListeners();
   }
 
+  void _resetState() {
+    _currentTurn = 1;
+    _playerHasChopsticks = false;
+    _waitingForNextTurn = false;
+    gameStarted = false;
+    gameFinished = false;
+    _ownedCards.clear();
+    _currentlySelectedCards.clear();
+    notifyListeners();
+  }
+
   void setWinners(List<dynamic> winners) {
     _gameResults.clear();
 
@@ -196,11 +207,7 @@ class GameManager extends ChangeNotifier {
       return -(i.points.compareTo(j.points));
     });
 
-    _ownedCards.clear();
-    _currentlySelectedCards.clear();
-
-    gameStarted = false;
-    gameFinished = true;
+    _resetState();
     notifyListeners();
   }
 
@@ -217,11 +224,12 @@ class GameManager extends ChangeNotifier {
   }
 
   void leaveGame() {
-    _currentTurn = 1;
-    _playerHasChopsticks = false;
-    _waitingForNextTurn = false;
-    gameStarted = false;
-    gameFinished = false;
+    _resetState();
+    notifyListeners();
+  }
+
+  void notifyPlayerLeftRoom() {
+    _resetState();
     notifyListeners();
   }
 }
