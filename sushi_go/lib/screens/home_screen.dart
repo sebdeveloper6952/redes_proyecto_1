@@ -220,23 +220,148 @@ class SecondRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Align(
-        alignment: Alignment(0, 8),
-        child: Container(
-          margin: const EdgeInsets.symmetric(
-            vertical: 300.0,
+      appBar: AppBar(
+        backgroundColor: Colors.purple,
+        title: Text(
+          '¿Como jugar?',
+          style: TextStyle(
+            color: Colors.white,
           ),
-          child: RaisedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              'REGRESAR',
-              style: TextStyle(
-                color: Colors.white,
+        ),
+      ),
+      body: Container(
+        child: Column(
+          children: [
+            Center(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                child: Text(
+                  'El juego se desarrolla en el transcurso de 3 turnos.' +  
+                  'Cuando un round comienza todos los jugadores deben elegir' + 
+                  ' 1 carta de la baraja que les tocó, la carta seleccionada' + 
+                  'permanecerá con el jugador escondida, cuando todos los' + 
+                  'jugadores hayan tomado su decisión revelan la carta elegida,' + 
+                  'el resto de la baraja volverán a ser repartidas y el siguiente' + 
+                  'round vas a recibir una nueva baraja. Ahora recuerda que debes' + 
+                  'elegir tus cartas con sabiduría porque si quieres ganar en este' + 
+                  'juego deberás hacer más puntos que los demás, ¿pero cómo hago' + 
+                  'más puntos que los demás? La forma de sumar punto es realizando' + 
+                  'combinaciones exitosas con las cartas que vamos eligiendo, esas' + 
+                  'combinaciones son las siguientes: ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 23,
+                  ),
+                  textAlign: TextAlign.justify,
+                ),
               ),
             ),
-          ),
+            Container(
+              child: ListTile(
+                leading: Icon(Icons.card_giftcard),
+                title: Text('Tempura: ',
+                  style: TextStyle(
+                      fontSize: 23,
+                  ),
+                ),
+                subtitle: Text(
+                ' - Una pareja de tempuras son 5 puntos, una tempura solitaria' + 
+                'no vale nada pero marcar más de una pareja en un round. ',
+                  style: TextStyle(
+                      fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              child: ListTile(
+                leading: Icon(Icons.card_giftcard),
+                title: Text('Sashimi: ',
+                  style: TextStyle(
+                      fontSize: 23,
+                  ),
+                ),
+                subtitle: Text(
+                ' - Un trío de sashimis son 10 puntos, un sashimi solo o incluso' + 
+                'dos no valen nada, puedes marcar más de un trío de Sashimi en un ' + 
+                'solo round pero te lo advierto es difícil. ',
+                  style: TextStyle(
+                      fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              child: ListTile(
+                leading: Icon(Icons.card_giftcard),
+                title: Text('Dumplings: ',
+                  style: TextStyle(
+                      fontSize: 23,
+                  ),
+                ),
+                subtitle: Text(
+                ' - Un dumpling equivale a 1 punto, dos dumplings equivalen a 3 puntos,' + 
+                'tres dumplings equivalen a 6 puntos, 4 dumplings equivalen a 10 puntos y' + 
+                'por último 5 dumplings equivalen a 15 puntos. ',
+                  style: TextStyle(
+                      fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              child: ListTile(
+                leading: Icon(Icons.card_giftcard),
+                title: Text('Nigiri y Wasabi: ',
+                  style: TextStyle(
+                      fontSize: 23,
+                  ),
+                ),
+                subtitle: Text(
+                ' - Un nigiri de calamar equivale a 3 puntos pero junto con un wasabi equivale' + 
+                'a 9 puntos, el nigiri de salmón solo equivale a 2 puntos pero junto a un wasabi' + 
+                'equivale a 6 puntos , y un nigiri de huevo solo equivale un punto pero junto al' + 
+                'wasabi equivale a 3. El wasabi no vale nada.',
+                  style: TextStyle(
+                      fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              child: ListTile(
+                leading: Icon(Icons.card_giftcard),
+                title: Text('Chopsticks: ',
+                  style: TextStyle(
+                      fontSize: 23,
+                  ),
+                ),
+                subtitle: Text(
+                ' - El chopstick no vale nada. ',
+                  style: TextStyle(
+                      fontSize: 18,
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment(0, 8),
+              child: Container(
+                child: RaisedButton(
+                  color: Colors.purple,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'REGRESAR',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
