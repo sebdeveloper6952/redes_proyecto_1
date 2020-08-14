@@ -46,13 +46,17 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # fonts:
+  fonts:
   # - family: Sushi
   #   fonts:
   #     - asset: assets/fonts/Sushi.ttf
+    - family: Dessert
+      fonts:
+        - asset: assets/fonts/Dessert.ttf
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/img/logo.png
     - assets/img/chopsticks.png
     - assets/img/dumplings.png
     - assets/img/egg_nigiri.png

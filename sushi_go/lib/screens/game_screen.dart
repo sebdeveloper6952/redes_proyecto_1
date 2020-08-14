@@ -260,6 +260,15 @@ class _GameScreenState extends State<GameScreen> {
                       },
                     );
                   },
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    _lobbyProvider.playerExitGame();
+                  },
                 )
               ],
             ),
@@ -295,7 +304,7 @@ class _GameScreenState extends State<GameScreen> {
                       },
                     );
                   },
-                )
+                ),
               ],
             ),
             body: _createWaitingRoomWidget(lobbyProvider),

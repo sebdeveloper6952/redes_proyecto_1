@@ -19,6 +19,14 @@ class ChatProvider extends ChangeNotifier {
 
   void sendMessage(String message) async {
     if (message == null || message.length == 0) return;
+
+    final userProvider = UserProvider();
+    _messages.add(
+      ChatMessageModel(
+          userId: userProvider.userId,
+          username: userProvider.username,
+          message: message),
+    );
     notifyListeners();
     ClientSocket().writeToSocket(
       _SocketSendChatMessage(message: message),
@@ -36,6 +44,10 @@ class ChatProvider extends ChangeNotifier {
     );
     _pendingMessages++;
     notifyListeners();
+  }
+
+  void resetMessages() {
+    _messages.clear();
   }
 
   void resetMessagesPendingCount() {
@@ -57,13 +69,14 @@ class ChatMessageModel {
 }
 
 class _SocketSendChatMessage extends ClientMessage {
+  final int type = ClientSocket.CLIENT_SEND_CHAT_MESSAGE;
   final String message;
 
   _SocketSendChatMessage({this.message});
 
   Map<String, dynamic> toJson() {
     return {
-      'type': ClientSocket.CLIENT_SEND_CHAT_MESSAGE,
+      'type': type,
       'user_id': UserProvider().userId,
       'room_id': LobbyProvider().roomId,
       'message': message,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sushi_go/models/player_model.dart';
+import 'package:sushi_go/providers/chat_provider.dart';
 import 'package:sushi_go/providers/client_socket.dart';
 import 'package:sushi_go/providers/game_manager.dart';
 import 'package:sushi_go/providers/user_provider.dart';
@@ -69,6 +70,29 @@ class LobbyProvider extends ChangeNotifier {
     GameManager().gameFinished = false;
     notifyListeners();
   }
+
+  void playerExitGame() {
+    _joinedRoom = false;
+    _playerCreatedRoom = false;
+    _roomPlayers.clear();
+    GameManager().leaveGame();
+    ChatProvider().resetMessages();
+    ClientSocket().writeToSocket(LeaveGameMessage());
+    _roomId = -1;
+    notifyListeners();
+  }
+
+  void playerExitApp() {
+    notifyListeners();
+    ClientSocket().writeToSocket(LeaveAppMessage());
+  }
+
+  void notifyPlayerLeftRoom() {
+    _joinedRoom = false;
+    _playerCreatedRoom = false;
+    _roomId = -1;
+    notifyListeners();
+  }
 }
 
 class CreateRoomMessage extends ClientMessage {
@@ -108,6 +132,34 @@ class StartGameMessage extends ClientMessage {
     return {
       'type': type,
       'room_id': roomId,
+    };
+  }
+}
+
+class LeaveGameMessage extends ClientMessage {
+  final int type = ClientSocket.CLIENT_LEAVE_GAME;
+  final int userId = UserProvider().userId;
+  final int roomId = LobbyProvider().roomId;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'user_id': userId,
+      'room_id': roomId,
+    };
+  }
+}
+
+class LeaveAppMessage extends ClientMessage {
+  final int type = ClientSocket.CLIENT_LEAVE_APP;
+  final int userId = UserProvider().userId;
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'user_id': userId,
     };
   }
 }

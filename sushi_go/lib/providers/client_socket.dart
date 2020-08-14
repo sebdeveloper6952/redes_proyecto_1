@@ -24,6 +24,9 @@ class ClientSocket {
   static const int SERVER_PLAYER_JOINED_ROOM = 115;
   static const int CLIENT_SEND_CHAT_MESSAGE = 200;
   static const int CLIENT_RECV_CHAT_MESSAGE = 201;
+  static const int CLIENT_LEAVE_GAME = 202;
+  static const int SERVER_PLAYER_LEFT_ROOM = 203;
+  static const int CLIENT_LEAVE_APP = 204;
   Socket _socket;
 
   // singleton and constructor
@@ -49,14 +52,14 @@ class ClientSocket {
       _socket = socket;
 
       print(
-        'Client: connected to: ${socket.remoteAddress.address}:${socket.remotePort}',
+        'connected to: ${socket.remoteAddress.address}:${socket.remotePort}',
       );
 
       /// definir callbacks para los eventos onData, onDone, onError.
       socket.listen(_socketOnData,
           onDone: _socketOnDone, onError: _socketOnError);
     }).catchError((Object error) {
-      print('Client: error connecting to server.');
+      print('error connecting to server.');
     });
   }
 
@@ -130,13 +133,15 @@ class ClientSocket {
         final userId = messageJsonMap['user_id'] ?? -1;
         final username = messageJsonMap['username'] ?? '';
         ChatProvider().messageReceived(userId, username, message);
+      } else if (serverMessage.type == SERVER_PLAYER_LEFT_ROOM) {
+        LobbyProvider().notifyPlayerLeftRoom();
       }
     }
   }
 
   void _socketOnDone() {
     _socket.destroy();
-    print('Client: server closed connection.');
+    print('server closed connection.');
   }
 
   void _socketOnError(Object error) {}
@@ -146,6 +151,11 @@ class ClientSocket {
     final Map<String, dynamic> jsonMessage = message.toJson();
     final String stringMessage = json.encode(jsonMessage);
     _socket?.write(stringMessage);
+
+    if (message.type == CLIENT_LEAVE_APP) {
+      _socket.close();
+      exit(0);
+    }
   }
 }
 
