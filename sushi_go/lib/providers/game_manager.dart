@@ -60,6 +60,7 @@ class GameManager extends ChangeNotifier {
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
   bool gameStarted = false;
   bool gameFinished = false;
+  bool get hasChopsticks => _playerHasChopsticks;
   bool get waitingForNextTurn => _waitingForNextTurn;
   bool get hasCardSelected => _currentlySelectedCards.length > 0;
   List<PlayerResults> get gameResults => List.unmodifiable(_gameResults);
@@ -175,10 +176,16 @@ class GameManager extends ChangeNotifier {
   }
 
   /// Accion especial de la carta "Chopsticks"
-  void activateChopsticks() {
-    print('chopsticks activados');
-    _playerHasChopsticks = true;
+  void toggleChopsticks() {
+    if (_playerHasChopsticks) _currentlySelectedCards.clear();
+    _playerHasChopsticks = !_playerHasChopsticks;
     notifyListeners();
+  }
+
+  bool validCardSelection() {
+    return _playerHasChopsticks
+        ? _currentlySelectedCards.length == 2
+        : _currentlySelectedCards.length == 1;
   }
 
   void _resetState() {
