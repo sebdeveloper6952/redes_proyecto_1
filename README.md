@@ -84,7 +84,7 @@ cd build/linux/release/bundle
 - descripción: ACK de mensaje 106, se retorna el id del cuarto para unirse, o -1 si ocurrió un error.
 ```json
 {
-  "type": 104,
+  "type": 107,
   "user_id": 1234
 }
 ```
@@ -196,7 +196,7 @@ cd build/linux/release/bundle
 - descripción: Realiza un broadcast del mensaje de chat recibido a todos los jugadores del mismo cuarto.
 ```json
 {
-  "type": 200,
+  "type": 201,
   "user_id": 1234,
   "username": "sebas",
   "message": "ola!"
