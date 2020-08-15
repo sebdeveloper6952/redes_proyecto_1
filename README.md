@@ -193,7 +193,7 @@ cd build/linux/release/bundle
 ```
 #### Mensaje 201
 - flujo: Servidor a Cliente.
-- descripción: Realiza un broadcast del mensaje de chat recibido a todos los jugadores del mismo cuarto.
+- descripción: Servidor realiza un broadcast del mensaje de chat recibido a todos los jugadores del mismo cuarto.
 ```json
 {
   "type": 201,
