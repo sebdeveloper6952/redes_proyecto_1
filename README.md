@@ -288,7 +288,7 @@ cd build/linux/release/bundle
 - descripción: Se envia para indicar que hubo un error al salir de un cuarto.
 ```json
 {
-  "type": 503,
+  "type": 503
 }
 ```
 
@@ -301,11 +301,11 @@ cd build/linux/release/bundle
   "user_id": 1234
 }
 ```
-#### Mensaje 503
+#### Mensaje 504
 - flujo: Servidor a Cliente.
 - descripción: Se envia para indicar que hubo un error en la salida de un jugador.
 ```json
 {
-  "type": 504,
+  "type": 504
 }
 ```
