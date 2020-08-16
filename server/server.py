@@ -204,7 +204,7 @@ def process_message(message, connection):
             response =  None
         else:
             response = {}
-            response["type"] = 406
+            response["type"] = 407
     elif (obj["type"] == 108): #108 Start game
         ''' Check if it is the manager and decks is empty, manage amount of cards  '''
         players = len(rooms[obj["room_id"]]["players"])
@@ -227,7 +227,7 @@ def process_message(message, connection):
             response = None    
         else:
             response = {}
-            response["type"] = 408
+            response["type"] = 409
     elif (obj["type"] == 110): #110 Send decks to players
         index = rooms[obj["room_id"]]["players"].index(obj["user_id"]) + rooms[obj["room_id"]]["turn"]
         nPlayers = len(rooms[obj["room_id"]]["players"])

@@ -48,6 +48,14 @@ cd build/linux/release/bundle
   "user_id": 1234
 }
 ```
+#### Mensaje 402
+- flujo: Servidor a Cliente.
+- descripción: Se envia para indicar que hubo un error en el login.
+```json
+{
+  "type": 402
+}
+```
 #### Mensaje 104
 - flujo: Cliente a Servidor.
 - descripción: Solicitud para crear un cuarto de juego.
@@ -65,6 +73,14 @@ cd build/linux/release/bundle
 {
   "type": 105,
   "room_id": 1234
+}
+```
+#### Mensaje 405
+- flujo: Servidor a Cliente.
+- descripción: Se envia para indicar que hubo un error al crear un cuarto.
+```json
+{
+  "type": 405,
 }
 ```
 
@@ -89,6 +105,15 @@ cd build/linux/release/bundle
 }
 ```
 
+#### Mensaje 407
+- flujo: Servidor a Cliente.
+- descripción: Se envia para indicar que hubo un error al unirse a cuarto.
+```json
+{
+  "type": 407
+}
+```
+
 #### Mensaje 108
 - flujo: Cliente a Servidor.
 - descripción: Solicitud para iniciar un el juego, únicamente lo puede realizar el jugador que creó el cuarto de juego.
@@ -106,6 +131,15 @@ cd build/linux/release/bundle
 {
   "type": 109,
   "status": 1
+}
+```
+
+#### Mensaje 409
+- flujo: Servidor a Cliente.
+- descripción: Se envia para indicar que hubo un error al iniciar el juego.
+```json
+{
+  "type": 409
 }
 ```
 
@@ -142,6 +176,15 @@ cd build/linux/release/bundle
 }
 ```
 
+#### Mensaje 412
+- flujo: Servidor a Cliente.
+- descripción: Se envia para indicar que hubo un error al recibir cartas de un jugador.
+```json
+{
+  "type": 412
+}
+```
+
 #### Mensaje 114
 - flujo: Servidor a Cliente.
 - descripción: Se envía a todos los jugadores de un cuarto para indicar que el juego ha terminado.
@@ -168,6 +211,15 @@ cd build/linux/release/bundle
 }
 ```
 
+#### Mensaje 414
+- flujo: Servidor a Cliente.
+- descripción: Se envía a todos los jugadores de un cuarto para indicar que hubo un error en el calculo de puntos.
+```json
+{
+  "type": 414
+}
+```
+
 #### Mensaje 115
 - flujo: Servidor a Cliente.
 - descripción: Se envía a todos los jugadores de un cuarto para indicar que un nuevo jugador se ha unido al cuarto.
@@ -191,6 +243,16 @@ cd build/linux/release/bundle
   "message": "ola!"
 }
 ```
+
+#### Mensaje 500
+- flujo: Servidor a Cliente.
+- descripción: Se envia para indicar que hubo un error al enviar un mensaje.
+```json
+{
+  "type": 500
+}
+```
+
 #### Mensaje 201
 - flujo: Servidor a Cliente.
 - descripción: Servidor realiza un broadcast del mensaje de chat recibido a todos los jugadores del mismo cuarto.
@@ -220,6 +282,16 @@ cd build/linux/release/bundle
   "type": 203
 }
 ```
+
+#### Mensaje 503
+- flujo: Servidor a Cliente.
+- descripción: Se envia para indicar que hubo un error al salir de un cuarto.
+```json
+{
+  "type": 503,
+}
+```
+
 #### Mensaje 204
 - flujo: Cliente a Servidor.
 - descripción: Jugador se sale de la aplicación, el servidor elimina todo registro de dicho jugador.
@@ -227,5 +299,13 @@ cd build/linux/release/bundle
 {
   "type": 204,
   "user_id": 1234
+}
+```
+#### Mensaje 503
+- flujo: Servidor a Cliente.
+- descripción: Se envia para indicar que hubo un error en la salida de un jugador.
+```json
+{
+  "type": 504,
 }
 ```
