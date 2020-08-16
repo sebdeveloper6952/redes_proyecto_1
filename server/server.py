@@ -29,111 +29,117 @@ def generateHands(nArrays, nCards):
     return aws, aws2
 
 def sendResults(roomId):
-    points = []
-    makiFirst = [0, -1]
-    makiSecond = [0, -1]
-    puddingsMost = [0, -1]
-    puddingsLeast = [999, -1]
-    for i in range(len(rooms[roomId]["selectedCards"])):
-        temporalPoints = 0
-        #Chopsticks -ya
-        print(rooms[roomId]["selectedCards"][i])
-        rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 2, rooms[roomId]["selectedCards"][i]))
-        print("Despúes de chopsticks", rooms[roomId]["selectedCards"][i])
-        #Dumplins
-        dumplins = rooms[roomId]["selectedCards"][i].count(8)
-        if (dumplins ==  2):
-            dumplins = 3
-        if (dumplins ==  3):
-            dumplins = 6
-        if (dumplins ==  4):
-            dumplins = 10
-        if (dumplins ==  5):
-            dumplins = 15
-        rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 8, rooms[roomId]["selectedCards"][i]))
-        temporalPoints += dumplins #add conversion to points
-        print("Despúes de dumplins", rooms[roomId]["selectedCards"][i], temporalPoints)
-        #Sashimi -ya
-        temporalPoints += (rooms[roomId]["selectedCards"][i].count(1) // 3) * 10 
-        rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 1, rooms[roomId]["selectedCards"][i]))
-        print("Despúes de sashimi", rooms[roomId]["selectedCards"][i], temporalPoints)
-        #Tempura -ya
-        temporalPoints += (rooms[roomId]["selectedCards"][i].count(9) //2) * 5
-        rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 9, rooms[roomId]["selectedCards"][i]))
-        print("Despúes de tempura", rooms[roomId]["selectedCards"][i], temporalPoints)
-        #Maki
-        maki = rooms[roomId]["selectedCards"][i].count(6) + (rooms[roomId]["selectedCards"][i].count(5) * 2) + (rooms[roomId]["selectedCards"][i].count(4) * 3)
-        rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 6, rooms[roomId]["selectedCards"][i]))
-        rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 5, rooms[roomId]["selectedCards"][i]))
-        rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 4, rooms[roomId]["selectedCards"][i]))
-        if (maki == makiFirst[0] and maki != 0):
-            makiFirst.append(i)
-        elif (maki > makiFirst[0]):
-            makiSecond = [makiFirst[0], makiFirst[1]]
-            makiFirst = [maki, i]
-        #pudding
-        pudding = rooms[roomId]["selectedCards"][i].count(3)
-        rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 3, rooms[roomId]["selectedCards"][i]))
-        if (pudding == puddingsMost[1] and pudding != 0):
-            puddingsMost.append(i)
-        elif (pudding > puddingsMost[1] and pudding != 0):
-            puddingsMost = [pudding, i]
-        elif (pudding == puddingsLeast[1] and pudding != 0):
-            puddingsLeast.append(i)
-        elif (pudding < puddingsLeast[1] and pudding != 0):
-            puddingsLeast = [pudding,i]
-        #points.append(temporalPoints)
-        #Nigiri
-        wasabi = 0
-        for j in rooms[roomId]["selectedCards"][i]:
-            if (j == 7):
-                wasabi += 1
-            elif (j == 10):
-                if (wasabi > 0):
-                    temporalPoints += 2 * 3
-                    wasabi -= 1
-                else:
-                    temporalPoints += 2
-            elif (j == 11):
-                if (wasabi > 0):
-                    temporalPoints += 1 * 3
-                    wasabi -= 1
-                else:
-                    temporalPoints += 1
-            elif (j == 12):
-                if (wasabi > 0):
-                    temporalPoints += 3 * 3
-                    wasabi -= 1
-                else:
-                    temporalPoints += 3
-        print("Despúes de Nigiri", rooms[roomId]["selectedCards"][i], temporalPoints)
-        points.append(temporalPoints)
-    for i in range(1,len(makiFirst)):
-        if (makiFirst[i] > -1):
-            points[makiFirst[i]] += 6 // len(range(1,len(makiFirst)))
-    for i in range(1,len(makiSecond)):
-        if (makiSecond[i] > -1):
-            points[makiSecond[i]] += 3 // len(range(1,len(makiSecond)))
-    print("Despúes de Maki", rooms[roomId]["selectedCards"][i], temporalPoints)
-    for i in range(1,len(puddingsMost)):
-        if (puddingsMost[i] > -1):
-            points[puddingsMost[i]] += 6 // len(range(1,len(puddingsMost)))
-    for i in range(1,len(puddingsLeast)):
-        if (puddingsMost[i] > -1):
-            points[puddingsMost[i]] -= 6 // len(range(1,len(puddingsLeast)))
-    print("Despúes de Pudding", rooms[roomId]["selectedCards"][i], temporalPoints)
-    response = {}
-    response["type"] = 114
-    response["status"] = []
-    for i in range(len(rooms[roomId]["decks"])):
-        obj = {}
-        obj["id"] = rooms[roomId]["players"][i]
-        obj["username"] = users[ rooms[roomId]["players"][i] ]["username"]
-        obj["points"] = points[i] 
-        response["status"].append(obj)
-    for i in rooms[roomId]["players"]:
+    try: 
+        points = []
+        makiFirst = [0, -1]
+        makiSecond = [0, -1]
+        puddingsMost = [0, -1]
+        puddingsLeast = [999, -1]
+        for i in range(len(rooms[roomId]["selectedCards"])):
+            temporalPoints = 0
+            #Chopsticks -ya
+            print(rooms[roomId]["selectedCards"][i])
+            rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 2, rooms[roomId]["selectedCards"][i]))
+            print("Despúes de chopsticks", rooms[roomId]["selectedCards"][i])
+            #Dumplins
+            dumplins = rooms[roomId]["selectedCards"][i].count(8)
+            if (dumplins ==  2):
+                dumplins = 3
+            if (dumplins ==  3):
+                dumplins = 6
+            if (dumplins ==  4):
+                dumplins = 10
+            if (dumplins ==  5):
+                dumplins = 15
+            rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 8, rooms[roomId]["selectedCards"][i]))
+            temporalPoints += dumplins #add conversion to points
+            print("Despúes de dumplins", rooms[roomId]["selectedCards"][i], temporalPoints)
+            #Sashimi -ya
+            temporalPoints += (rooms[roomId]["selectedCards"][i].count(1) // 3) * 10 
+            rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 1, rooms[roomId]["selectedCards"][i]))
+            print("Despúes de sashimi", rooms[roomId]["selectedCards"][i], temporalPoints)
+            #Tempura -ya
+            temporalPoints += (rooms[roomId]["selectedCards"][i].count(9) //2) * 5
+            rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 9, rooms[roomId]["selectedCards"][i]))
+            print("Despúes de tempura", rooms[roomId]["selectedCards"][i], temporalPoints)
+            #Maki
+            maki = rooms[roomId]["selectedCards"][i].count(6) + (rooms[roomId]["selectedCards"][i].count(5) * 2) + (rooms[roomId]["selectedCards"][i].count(4) * 3)
+            rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 6, rooms[roomId]["selectedCards"][i]))
+            rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 5, rooms[roomId]["selectedCards"][i]))
+            rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 4, rooms[roomId]["selectedCards"][i]))
+            if (maki == makiFirst[0] and maki != 0):
+                makiFirst.append(i)
+            elif (maki > makiFirst[0]):
+                makiSecond = [makiFirst[0], makiFirst[1]]
+                makiFirst = [maki, i]
+            #pudding
+            pudding = rooms[roomId]["selectedCards"][i].count(3)
+            rooms[roomId]["selectedCards"][i] = list(filter(lambda a: a != 3, rooms[roomId]["selectedCards"][i]))
+            if (pudding == puddingsMost[1] and pudding != 0):
+                puddingsMost.append(i)
+            elif (pudding > puddingsMost[1] and pudding != 0):
+                puddingsMost = [pudding, i]
+            elif (pudding == puddingsLeast[1] and pudding != 0):
+                puddingsLeast.append(i)
+            elif (pudding < puddingsLeast[1] and pudding != 0):
+                puddingsLeast = [pudding,i]
+            #points.append(temporalPoints)
+            #Nigiri
+            wasabi = 0
+            for j in rooms[roomId]["selectedCards"][i]:
+                if (j == 7):
+                    wasabi += 1
+                elif (j == 10):
+                    if (wasabi > 0):
+                        temporalPoints += 2 * 3
+                        wasabi -= 1
+                    else:
+                        temporalPoints += 2
+                elif (j == 11):
+                    if (wasabi > 0):
+                        temporalPoints += 1 * 3
+                        wasabi -= 1
+                    else:
+                        temporalPoints += 1
+                elif (j == 12):
+                    if (wasabi > 0):
+                        temporalPoints += 3 * 3
+                        wasabi -= 1
+                    else:
+                        temporalPoints += 3
+            print("Despúes de Nigiri", rooms[roomId]["selectedCards"][i], temporalPoints)
+            points.append(temporalPoints)
+        for i in range(1,len(makiFirst)):
+            if (makiFirst[i] > -1):
+                points[makiFirst[i]] += 6 // len(range(1,len(makiFirst)))
+        for i in range(1,len(makiSecond)):
+            if (makiSecond[i] > -1):
+                points[makiSecond[i]] += 3 // len(range(1,len(makiSecond)))
+        print("Despúes de Maki", rooms[roomId]["selectedCards"][i], temporalPoints)
+        for i in range(1,len(puddingsMost)):
+            if (puddingsMost[i] > -1):
+                points[puddingsMost[i]] += 6 // len(range(1,len(puddingsMost)))
+        for i in range(1,len(puddingsLeast)):
+            if (puddingsMost[i] > -1):
+                points[puddingsMost[i]] -= 6 // len(range(1,len(puddingsLeast)))
+        print("Despúes de Pudding", rooms[roomId]["selectedCards"][i], temporalPoints)
+        response = {}
+        response["type"] = 114
+        response["status"] = []
+        for i in range(len(rooms[roomId]["decks"])):
+            obj = {}
+            obj["id"] = rooms[roomId]["players"][i]
+            obj["username"] = users[ rooms[roomId]["players"][i] ]["username"]
+            obj["points"] = points[i] 
+            response["status"].append(obj)
+        for i in rooms[roomId]["players"]:
+                users[i]["socket"].send(repr(response).encode("utf-8"))
+        del rooms[roomId] #Remove room
+    except:
+        response = {}
+        response["type"] = 414
+        for i in rooms[roomId]["players"]:
             users[i]["socket"].send(repr(response).encode("utf-8"))
-    del rooms[roomId] #Remove room
 
 def process_message(message, connection): 
     global usersC
@@ -142,36 +148,42 @@ def process_message(message, connection):
         "type": 0
     }
     if (obj["type"] == 101): #101 Login
-        #Generate user id
-        userId = usersC
-        usersC += 1
-        #Add user to list
-        users[userId] =  { #id
-            "username": obj["username"],
-            "socket": connection
-        }
-        #Build response
-        response["type"] = 102
-        response["user_id"] = userId
+        try: 
+            #Generate user id
+            userId = usersC
+            usersC += 1
+            #Add user to list
+            users[userId] =  { #id
+                "username": obj["username"],
+                "socket": connection
+            }
+            #Build response
+            response["type"] = 102
+            response["user_id"] = userId
+        except:
+            response["type"] = 402
     elif (obj["type"] == 104): #104 Create room
-        global roomsC
-        #Generate room id
-        roomsId = roomsC
-        roomsC += 1
-        #Add room to list
-        rooms[roomsId] =  { # room
-            "players": [obj["user_id"]], #players playing on the romm,
-            "turn": 0,
-            "decks": [],
-            "selectedCards": [],
-            "cardsReceived": 0,
-        }
-        #Build response
-        response["type"] = 105
-        response["room_id"] = roomsId
+        try:
+            global roomsC
+            #Generate room id
+            roomsId = roomsC
+            roomsC += 1
+            #Add room to list
+            rooms[roomsId] =  { # room
+                "players": [obj["user_id"]], #players playing on the romm,
+                "turn": 0,
+                "decks": [],
+                "selectedCards": [],
+                "cardsReceived": 0,
+            }
+            #Build response
+            response["type"] = 105
+            response["room_id"] = roomsId
+        except:
+            response["type"] = 405
     elif (obj["type"] == 106): #106 join room
         #Add usser to list og players in the room
-        if ((len(rooms[obj["room_id"]]["players"]) < 5) and (len(rooms[obj["room_id"]]["selectedCards"]) == 0)):
+        if ((len(rooms[obj["room_id"]]["players"]) < 5) and (len(rooms[obj["room_id"]]["selectedCards"]) == 0) and (obj["room_id"] in rooms)):
             rooms[obj["room_id"]]["players"].append(obj["user_id"])
             #Build response
             ''' Check first if is in the list and the length of the array '''
@@ -222,52 +234,64 @@ def process_message(message, connection):
         response["type"] = 111
         response["cards"] = rooms[ obj["room_id"] ][  "decks"  ][ index % nPlayers ]
     elif (obj["type"] == 112): #112 Receive card from player
-        ## Add routine to send message when all have send their card 
-        pos = rooms[obj["room_id"]]["players"].index(obj["user_id"])
-        index = pos + rooms[obj["room_id"]]["turn"]
-        nPlayers = len(rooms[obj["room_id"]]["players"])
-        for i in obj["cards"]:
-            #print("Carta: ", i)
-            if (i<0):
-                rooms[ obj["room_id"] ]["decks"][ index % nPlayers ].append( abs(i) )
-            else:
-                #print("Antes", rooms[ obj["room_id"] ]["decks"][ index % nPlayers ])
-                rooms[ obj["room_id"] ]["decks"][ index % nPlayers ].remove(i)
-                #print("Despues", rooms[ obj["room_id"] ]["decks"][ index % nPlayers ])
-                rooms[ obj["room_id"] ]["selectedCards"][pos].append(i)
-        rooms[ obj["room_id"] ]["cardsReceived"] += 1
-        #Check # receive cards       
-        if (rooms[ obj["room_id"] ]["cardsReceived"] == len(rooms[ obj["room_id"] ]["players"])): #if every player send their cards
-            #Check if the game is over
-            if (len(rooms[ obj["room_id"] ]["decks"][0]) == 0):
-                sendResults(obj["room_id"]) ##LLamar al 114
-            else:
-                rooms[ obj["room_id"] ]["turn"] += 1
-                rooms[ obj["room_id"] ]["cardsReceived"] = 0
-                process_message('{"type": 108, "room_id":'+str(obj["room_id"]) +'}', None)
-        response = None
+        try:
+            ## Add routine to send message when all have send their card 
+            pos = rooms[obj["room_id"]]["players"].index(obj["user_id"])
+            index = pos + rooms[obj["room_id"]]["turn"]
+            nPlayers = len(rooms[obj["room_id"]]["players"])
+            for i in obj["cards"]:
+                #print("Carta: ", i)
+                if (i<0):
+                    rooms[ obj["room_id"] ]["decks"][ index % nPlayers ].append( abs(i) )
+                else:
+                    #print("Antes", rooms[ obj["room_id"] ]["decks"][ index % nPlayers ])
+                    rooms[ obj["room_id"] ]["decks"][ index % nPlayers ].remove(i)
+                    #print("Despues", rooms[ obj["room_id"] ]["decks"][ index % nPlayers ])
+                    rooms[ obj["room_id"] ]["selectedCards"][pos].append(i)
+            rooms[ obj["room_id"] ]["cardsReceived"] += 1
+            #Check # receive cards       
+            if (rooms[ obj["room_id"] ]["cardsReceived"] == len(rooms[ obj["room_id"] ]["players"])): #if every player send their cards
+                #Check if the game is over
+                if (len(rooms[ obj["room_id"] ]["decks"][0]) == 0):
+                    sendResults(obj["room_id"]) ##LLamar al 114
+                else:
+                    rooms[ obj["room_id"] ]["turn"] += 1
+                    rooms[ obj["room_id"] ]["cardsReceived"] = 0
+                    process_message('{"type": 108, "room_id":'+str(obj["room_id"]) +'}', None)
+            response = None
+        except:
+            response["type"] = 412
     elif (obj["type"] == 200): #200 Send message
-        response["type"] = 201
-        response["message"] = obj["message"]
-        response["user_id"] = obj["user_id"]
-        response["username"] = users[obj["user_id"]]["username"]
-        for i in rooms[obj["room_id"]]["players"]:
-            if (obj["user_id"] != i):
-                users[i]["socket"].send(repr(response).encode("utf-8"))
-        response = None
+        try: 
+            response["type"] = 201
+            response["message"] = obj["message"]
+            response["user_id"] = obj["user_id"]
+            response["username"] = users[obj["user_id"]]["username"]
+            for i in rooms[obj["room_id"]]["players"]:
+                if (obj["user_id"] != i):
+                    users[i]["socket"].send(repr(response).encode("utf-8"))
+            response = None
+        except: 
+            response["type"] = 500
     elif (obj["type"] == 202): #202 kill room
-        response["type"] = 203
-        for i in rooms[obj["room_id"]]["players"]:
-            users[i]["socket"].send(repr(response).encode("utf-8"))
-        del rooms[obj["room_id"]] #Remove room
-        #process_message('{"type": 204, "user_id":'+str(obj["user_id"]) +'}', None)
-        response = None
+        try:
+            response["type"] = 203
+            for i in rooms[obj["room_id"]]["players"]:
+                users[i]["socket"].send(repr(response).encode("utf-8"))
+            del rooms[obj["room_id"]] #Remove room
+            #process_message('{"type": 204, "user_id":'+str(obj["user_id"]) +'}', None)
+            response = None
+        except:
+            response["type"] = 503
     elif (obj["type"] == 204): #202 kill person
-        socket = users[obj["user_id"]]["socket"]
-        sel.unregister(socket)
-        socket.close()
-        del users[obj["user_id"]] #Remove room
-        response = None
+        try:
+            socket = users[obj["user_id"]]["socket"]
+            sel.unregister(socket)
+            socket.close()
+            del users[obj["user_id"]] #Remove room
+            response = None
+        except:
+            response["type"] = 504
     return response
 
 def accept_wrapper(sock):
