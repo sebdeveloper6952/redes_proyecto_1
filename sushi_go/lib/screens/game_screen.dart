@@ -195,12 +195,14 @@ class _GameScreenState extends State<GameScreen> {
                               ),
                             ),
                             RaisedButton(
-                              onPressed: (_gameManager.hasCardSelected &&
+                              onPressed: (_gameManager.validCardSelection() &&
                                       !_gameManager.waitingForNextTurn)
                                   ? _sendCards
                                   : null,
                               child: Text(
-                                'ESCOGER CARTA',
+                                _gameManager.hasChopsticks
+                                    ? 'ESCOGER CARTAS'
+                                    : 'ESCOGER CARTA',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),

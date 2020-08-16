@@ -257,18 +257,20 @@ class SecondRoute extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: Text(
-                  'El juego se desarrolla en el transcurso de 3 turnos.' +
-                      'Cuando un round comienza todos los jugadores deben elegir' +
-                      ' 1 carta de la baraja que les tocó, la carta seleccionada' +
-                      'permanecerá con el jugador escondida, cuando todos los' +
-                      'jugadores hayan tomado su decisión revelan la carta elegida,' +
-                      'el resto de la baraja volverán a ser repartidas y el siguiente' +
-                      'round vas a recibir una nueva baraja. Ahora recuerda que debes' +
-                      'elegir tus cartas con sabiduría porque si quieres ganar en este' +
-                      'juego deberás hacer más puntos que los demás, ¿pero cómo hago' +
-                      'más puntos que los demás? La forma de sumar punto es realizando' +
-                      'combinaciones exitosas con las cartas que vamos eligiendo, esas' +
-                      'combinaciones son las siguientes: ',
+                  'El juego se desarrolla mientras haya cartas disponibles.' + 
+                  'Cuando un round comienza todos los jugadores deben elegir' + 
+                  '1 carta de la baraja que les tocó, la carta seleccionada' + 
+                  'permanecerá con el jugador escondida, cuando todos los' + 
+                  'jugadores hayan tomado su decisión se continuará el juego' + 
+                  '(si no te gusta lo elegiste vuelve a presionar la carta' + 
+                  'elegida para elegir otra pero hazlo antes de guardar), el' + 
+                  'resto de la baraja volverán a ser repartidas y el siguiente' + 
+                  'round vas a recibir una nueva baraja. Ahora recuerda que' + 
+                  'debes elegir tus cartas con sabiduría porque si quieres ganar' + 
+                  'en este juego deberás hacer más puntos que los demás, ¿pero' + 
+                  'cómo hago más puntos que los demás? La forma de sumar punto es' + 
+                  'realizando combinaciones exitosas con las cartas que vamos' + 
+                  'eligiendo, esas combinaciones son las siguientes: ',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 23,

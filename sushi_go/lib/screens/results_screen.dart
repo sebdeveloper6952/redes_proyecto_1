@@ -6,15 +6,21 @@ import 'package:sushi_go/router.dart';
 
 class ResultsScreen extends StatelessWidget {
   final _colors = {
-    1: Color.fromRGBO(201, 176, 55, 100),
-    2: Color.fromRGBO(215, 215, 215, 100),
-    3: Color.fromRGBO(173, 138, 86, 100),
+    1: Color.fromRGBO(201, 176, 55, 1),
+    2: Color.fromRGBO(200, 200, 200, 1),
+    3: Color.fromRGBO(173, 138, 86, 1),
   };
 
   ResultsScreen({Key key}) : super(key: key);
 
   Widget _createResultBox(
       EdgeInsetsGeometry m, Color c, String t, String n, String p) {
+    final style = TextStyle(
+      fontFamily: 'Dessert',
+      color: Colors.white,
+      fontSize: 22,
+      fontWeight: FontWeight.bold,
+    );
     return Align(
       alignment: Alignment.center,
       child: Container(
@@ -29,19 +35,13 @@ class ResultsScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(
-              t,
-            ),
+            Text(t, style: style),
             Expanded(
               child: Center(
-                child: Text(
-                  n,
-                ),
+                child: Text(n, style: style),
               ),
             ),
-            Text(
-              p,
-            )
+            Text('$p Puntos', style: style),
           ],
         ),
       ),

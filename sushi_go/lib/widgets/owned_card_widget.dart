@@ -3,14 +3,27 @@ import 'package:sushi_go/models/sushi_go_card.dart';
 import 'package:sushi_go/providers/game_manager.dart';
 import 'package:provider/provider.dart';
 
-class OwnedCardWidget extends StatelessWidget {
+class OwnedCardWidget extends StatefulWidget {
   final SushiGoCard card;
 
   OwnedCardWidget({this.card});
 
   @override
+  _OwnedCardWidgetState createState() => _OwnedCardWidgetState();
+}
+
+class _OwnedCardWidgetState extends State<OwnedCardWidget> {
+  GameManager _gameManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _gameManager = context.read<GameManager>();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final actionWidget = card.id == 2
+    final actionWidget = widget.card.id == 2
         ? Align(
             alignment: Alignment.topCenter,
             child: Container(
@@ -18,9 +31,10 @@ class OwnedCardWidget extends StatelessWidget {
               child: RaisedButton(
                 hoverColor: Colors.greenAccent,
                 color: Colors.redAccent.withOpacity(0.15),
-                child: Text('ACTIVAR'),
+                child:
+                    Text(_gameManager.hasChopsticks ? 'DESACTIVAR' : 'ACTIVAR'),
                 onPressed: () {
-                  context.read<GameManager>().activateChopsticks();
+                  _gameManager.toggleChopsticks();
                 },
               ),
             ),
@@ -41,7 +55,7 @@ class OwnedCardWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: Stack(children: [
-                  Center(child: Image.asset('assets/img/${card.img}')),
+                  Center(child: Image.asset('assets/img/${widget.card.img}')),
                   actionWidget,
                 ]),
               ),
@@ -58,7 +72,7 @@ class OwnedCardWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      card.name,
+                      widget.card.name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Dessert',
@@ -68,7 +82,7 @@ class OwnedCardWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      card.points,
+                      widget.card.points,
                       style: TextStyle(
                         fontFamily: 'Dessert',
                         fontSize: 18,

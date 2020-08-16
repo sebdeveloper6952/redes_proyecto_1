@@ -60,6 +60,7 @@ class GameManager extends ChangeNotifier {
   List<SushiGoCard> get cards => List.unmodifiable(_cards);
   bool gameStarted = false;
   bool gameFinished = false;
+  bool get hasChopsticks => _playerHasChopsticks;
   bool get waitingForNextTurn => _waitingForNextTurn;
   bool get hasCardSelected => _currentlySelectedCards.length > 0;
   List<PlayerResults> get gameResults => List.unmodifiable(_gameResults);
@@ -175,9 +176,26 @@ class GameManager extends ChangeNotifier {
   }
 
   /// Accion especial de la carta "Chopsticks"
-  void activateChopsticks() {
-    print('chopsticks activados');
-    _playerHasChopsticks = true;
+  void toggleChopsticks() {
+    if (_playerHasChopsticks) _currentlySelectedCards.clear();
+    _playerHasChopsticks = !_playerHasChopsticks;
+    notifyListeners();
+  }
+
+  bool validCardSelection() {
+    return _playerHasChopsticks
+        ? _currentlySelectedCards.length == 2
+        : _currentlySelectedCards.length == 1;
+  }
+
+  void _resetState() {
+    _currentTurn = 1;
+    _playerHasChopsticks = false;
+    _waitingForNextTurn = false;
+    gameStarted = false;
+    gameFinished = false;
+    _ownedCards.clear();
+    _currentlySelectedCards.clear();
     notifyListeners();
   }
 
@@ -196,8 +214,13 @@ class GameManager extends ChangeNotifier {
       return -(i.points.compareTo(j.points));
     });
 
+    _currentTurn = 1;
+    _playerHasChopsticks = false;
+    _waitingForNextTurn = false;
     gameStarted = false;
     gameFinished = true;
+    _ownedCards.clear();
+    _currentlySelectedCards.clear();
     notifyListeners();
   }
 
@@ -214,11 +237,12 @@ class GameManager extends ChangeNotifier {
   }
 
   void leaveGame() {
-    _currentTurn = 1;
-    _playerHasChopsticks = false;
-    _waitingForNextTurn = false;
-    gameStarted = false;
-    gameFinished = false;
+    _resetState();
+    notifyListeners();
+  }
+
+  void notifyPlayerLeftRoom() {
+    _resetState();
     notifyListeners();
   }
 }
