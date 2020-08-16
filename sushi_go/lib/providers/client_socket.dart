@@ -27,6 +27,15 @@ class ClientSocket {
   static const int CLIENT_LEAVE_GAME = 202;
   static const int SERVER_PLAYER_LEFT_ROOM = 203;
   static const int CLIENT_LEAVE_APP = 204;
+  static const int SERVER_LOGIN_ERROR = 402;
+  static const int SERVER_CREATE_ROOM_ERROR = 405;
+  static const int SERVER_JOIN_ROOM_ERROR = 407;
+  static const int SERVER_START_GAME_ERROR = 409;
+  static const int SERVER_RECV_CARDS_ERROR = 412;
+  static const int SERVER_GAME_FINISH_ERROR = 414;
+  static const int SERVER_SEND_CHAT_MSG_ERROR = 500;
+  static const int SERVER_EXIT_ROOM_ERROR = 503;
+  static const int SERVER_EXIT_APP_ERROR = 504;
   Socket _socket;
 
   // singleton and constructor
@@ -140,6 +149,8 @@ class ClientSocket {
         LobbyProvider().notifyPlayerLeftRoom();
         GameManager().notifyPlayerLeftRoom();
         ChatProvider().resetMessages();
+      } else if (serverMessage.type >= 400) {
+        /// error general
       }
     }
   }
