@@ -139,6 +139,7 @@ class ClientSocket {
       } else if (serverMessage.type == SERVER_PLAYER_LEFT_ROOM) {
         LobbyProvider().notifyPlayerLeftRoom();
         GameManager().notifyPlayerLeftRoom();
+        ChatProvider().resetMessages();
       }
     }
   }

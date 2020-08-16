@@ -70,6 +70,7 @@ class LobbyProvider extends ChangeNotifier {
     _playerCreatedRoom = false;
     GameManager().gameStarted = false;
     GameManager().gameFinished = false;
+    ChatProvider().resetMessages();
     notifyListeners();
   }
 
