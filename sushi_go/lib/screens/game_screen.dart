@@ -10,6 +10,7 @@ import 'package:sushi_go/widgets/chat_widget.dart';
 import 'package:sushi_go/widgets/loading_card.dart';
 import 'package:sushi_go/widgets/lobby_player_widget.dart';
 import 'package:sushi_go/widgets/owned_card_widget.dart';
+import 'package:sushi_go/screens/home_screen.dart';
 
 class GameScreen extends StatefulWidget {
   GameScreen({Key key}) : super(key: key);
@@ -275,7 +276,23 @@ class _GameScreenState extends State<GameScreen> {
                 ),
                 FlatButton.icon(
                   label: Text(
-                    'Salir de cuarto',
+                    'Instrucciones',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon: Icon(
+                    Icons.help_outline,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SecondRoute()),
+                    );
+                  },
+                ),
+                FlatButton.icon(
+                  label: Text(
+                    'Salir de Cuarto',
                     style: TextStyle(color: Colors.white),
                   ),
                   icon: Icon(
