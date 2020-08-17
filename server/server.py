@@ -183,27 +183,30 @@ def process_message(message, connection):
             response["type"] = 405
     elif (obj["type"] == 106): #106 join room
         #Add usser to list og players in the room
-        if ((len(rooms[obj["room_id"]]["players"]) < 5) and (len(rooms[obj["room_id"]]["selectedCards"]) == 0) and (obj["room_id"] in rooms)):
-            rooms[obj["room_id"]]["players"].append(obj["user_id"])
-            #Build response
-            ''' Check first if is in the list and the length of the array '''
-            response["type"] = 107
-            response["room_id"] = obj["room_id"]
-            users[obj["user_id"]]["socket"].send(repr(response).encode("utf-8"))
-            ###### Send Broadcast #######################################    
-            response = {}
-            response["type"] = 115
-            response["players"]  = []
-            for i in rooms[obj["room_id"]]["players"]:
-                temp = {}
-                temp["id"] = i
-                temp["username"] = users[i]["username"]
-                response["players"].append(temp)
-            for i in rooms[obj["room_id"]]["players"]: #For making the broadcast
-                users[i]["socket"].send(repr(response).encode("utf-8"))
-            response =  None
-        else:
-            response = {}
+        try:
+            if ((len(rooms[obj["room_id"]]["players"]) < 5) and (len(rooms[obj["room_id"]]["selectedCards"]) == 0)):
+                rooms[obj["room_id"]]["players"].append(obj["user_id"])
+                #Build response
+                ''' Check first if is in the list and the length of the array '''
+                response["type"] = 107
+                response["room_id"] = obj["room_id"]
+                users[obj["user_id"]]["socket"].send(repr(response).encode("utf-8"))
+                ###### Send Broadcast #######################################    
+                response = {}
+                response["type"] = 115
+                response["players"]  = []
+                for i in rooms[obj["room_id"]]["players"]:
+                    temp = {}
+                    temp["id"] = i
+                    temp["username"] = users[i]["username"]
+                    response["players"].append(temp)
+                for i in rooms[obj["room_id"]]["players"]: #For making the broadcast
+                    users[i]["socket"].send(repr(response).encode("utf-8"))
+                response =  None
+            else:
+                response = {}
+                response["type"] = 407
+        except:
             response["type"] = 407
     elif (obj["type"] == 108): #108 Start game
         ''' Check if it is the manager and decks is empty, manage amount of cards  '''
