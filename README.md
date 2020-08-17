@@ -8,6 +8,7 @@ Integrantes
 ### Juego Elegido: SushiGo
 - De 2 a 5 jugadores.
 - Es un juego inspirado en los restaurantes Japoneses en los cuales la comida pasa por una banda rotatoria, y las personas van agarrando los platillos que deseen. SushiGo toma ese concepto y lo plasma en un divertido juego de cartas en el cual los jugadores deben armar combinaciones de platillos para obtener puntos y vencer a sus oponentes. Es un juego con reglas muy sencillas, de duración corta, pero que sin duda entretiene.
+- Video: https://youtu.be/vkR9rx3SxZc
 
 ### Principales Dificultades
 ### Lecciones Aprendidas
