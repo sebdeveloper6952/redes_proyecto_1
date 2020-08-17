@@ -47,7 +47,9 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void resetMessages() {
+    _pendingMessages = 0;
     _messages.clear();
+    notifyListeners();
   }
 
   void resetMessagesPendingCount() {

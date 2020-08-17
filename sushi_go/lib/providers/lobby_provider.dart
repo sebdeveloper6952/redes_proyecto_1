@@ -68,10 +68,11 @@ class LobbyProvider extends ChangeNotifier {
     _roomPlayers.clear();
     _joinedRoom = false;
     _playerCreatedRoom = false;
-    _roomId = -1;
     GameManager().gameStarted = false;
     GameManager().gameFinished = false;
     ChatProvider().resetMessages();
+    ClientSocket().writeToSocket(LeaveGameMessage());
+    _roomId = -1;
     notifyListeners();
   }
 
@@ -95,6 +96,7 @@ class LobbyProvider extends ChangeNotifier {
     _joinedRoom = false;
     _playerCreatedRoom = false;
     _roomId = -1;
+    _roomPlayers.clear();
     notifyListeners();
   }
 }
