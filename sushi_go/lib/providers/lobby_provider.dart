@@ -68,6 +68,7 @@ class LobbyProvider extends ChangeNotifier {
     _roomPlayers.clear();
     _joinedRoom = false;
     _playerCreatedRoom = false;
+    _roomId = -1;
     GameManager().gameStarted = false;
     GameManager().gameFinished = false;
     ChatProvider().resetMessages();

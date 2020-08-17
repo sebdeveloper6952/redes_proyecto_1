@@ -151,6 +151,7 @@ class ClientSocket {
         ChatProvider().resetMessages();
       } else if (serverMessage.type >= 400) {
         /// error general
+        print('error ${serverMessage.type}');
       }
     }
   }

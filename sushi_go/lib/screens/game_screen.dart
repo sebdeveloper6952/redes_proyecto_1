@@ -242,16 +242,26 @@ class _GameScreenState extends State<GameScreen> {
                 Consumer<ChatProvider>(
                   builder: (context, chatProvider, widget) {
                     final icon = chatProvider.pendingMessagesCount == 0
-                        ? Icon(Icons.chat_bubble_outline)
+                        ? Icon(
+                            Icons.chat_bubble_outline,
+                            color: Colors.white,
+                          )
                         : Badge(
                             badgeColor: Colors.white,
                             badgeContent: Text(
                               chatProvider.pendingMessagesCount.toString(),
                             ),
-                            child: Icon(Icons.chat_bubble_outline),
+                            child: Icon(
+                              Icons.chat_bubble_outline,
+                              color: Colors.white,
+                            ),
                           );
 
-                    return IconButton(
+                    return FlatButton.icon(
+                      label: Text(
+                        'Chat',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       icon: icon,
                       onPressed: () {
                         _chatProvider.resetMessagesPendingCount();
@@ -263,7 +273,11 @@ class _GameScreenState extends State<GameScreen> {
                     );
                   },
                 ),
-                IconButton(
+                FlatButton.icon(
+                  label: Text(
+                    'Salir de cuarto',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   icon: Icon(
                     Icons.close,
                     color: Colors.white,
@@ -286,16 +300,24 @@ class _GameScreenState extends State<GameScreen> {
                 Consumer<ChatProvider>(
                   builder: (context, chatProvider, widget) {
                     final icon = chatProvider.pendingMessagesCount == 0
-                        ? Icon(Icons.chat_bubble_outline)
+                        ? Icon(
+                            Icons.chat_bubble_outline,
+                            color: Colors.white,
+                          )
                         : Badge(
                             badgeColor: Colors.white,
                             badgeContent: Text(
                               chatProvider.pendingMessagesCount.toString(),
                             ),
-                            child: Icon(Icons.chat_bubble_outline),
+                            child: Icon(Icons.chat_bubble_outline,
+                                color: Colors.white),
                           );
 
-                    return IconButton(
+                    return FlatButton.icon(
+                      label: Text(
+                        'Chat',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       icon: icon,
                       onPressed: () {
                         _chatProvider.resetMessagesPendingCount();
@@ -306,6 +328,21 @@ class _GameScreenState extends State<GameScreen> {
                       },
                     );
                   },
+                ),
+                FlatButton.icon(
+                  onPressed: () {
+                    context.read<LobbyProvider>().returnToLobby();
+                  },
+                  icon: Icon(
+                    Icons.home,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    'Volver al Lobby',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ],
             ),
