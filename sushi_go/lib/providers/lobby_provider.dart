@@ -12,10 +12,15 @@ class LobbyProvider extends ChangeNotifier {
   final List<PlayerModel> _roomPlayers = [];
   bool _loggedIn = false;
   bool _joinedRoom = false;
+  bool _hasError = false;
   bool _playerCreatedRoom = false;
+  bool _playerTriggeredExitRoom = false;
   int _roomId = -1;
+  String _errorMsg;
   bool get loggedIn => _loggedIn;
   bool get joinedRoom => _joinedRoom;
+  bool get hasError => _hasError;
+  String get errorMsg => _errorMsg;
   bool get playerCreatedRoom => _playerCreatedRoom;
   int get roomId => _roomId;
   int get playerCount => _roomPlayers.length;
@@ -71,15 +76,15 @@ class LobbyProvider extends ChangeNotifier {
     GameManager().gameStarted = false;
     GameManager().gameFinished = false;
     ChatProvider().resetMessages();
-    ClientSocket().writeToSocket(LeaveGameMessage());
     _roomId = -1;
     notifyListeners();
   }
 
   void playerExitGame() {
     _joinedRoom = false;
-    _playerCreatedRoom = false;
     _roomPlayers.clear();
+    _playerCreatedRoom = false;
+    _playerTriggeredExitRoom = true;
     GameManager().leaveGame();
     ChatProvider().resetMessages();
     ClientSocket().writeToSocket(LeaveGameMessage());
@@ -97,6 +102,23 @@ class LobbyProvider extends ChangeNotifier {
     _playerCreatedRoom = false;
     _roomId = -1;
     _roomPlayers.clear();
+    if (!_playerTriggeredExitRoom) {
+      _hasError = true;
+      _errorMsg = 'Un jugador se salió del cuarto y no se puede continuar.';
+    }
+    _playerTriggeredExitRoom = false;
+    notifyListeners();
+  }
+
+  void notifyJoinRoomError() {
+    _hasError = true;
+    _errorMsg = 'Error al unirse al cuarto.';
+    notifyListeners();
+  }
+
+  void dismissError() {
+    _hasError = false;
+    _errorMsg = '';
     notifyListeners();
   }
 }

@@ -348,7 +348,7 @@ class _GameScreenState extends State<GameScreen> {
                 ),
                 FlatButton.icon(
                   onPressed: () {
-                    context.read<LobbyProvider>().returnToLobby();
+                    context.read<LobbyProvider>().playerExitGame();
                   },
                   icon: Icon(
                     Icons.home,

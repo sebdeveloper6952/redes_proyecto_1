@@ -54,12 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _userProvider = context.read<UserProvider>();
-    _lobbyProvider = context.read<LobbyProvider>();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    _lobbyProvider = context.watch<LobbyProvider>();
 
     final usernameWidget = Scaffold(
       appBar: AppBar(
@@ -135,64 +135,100 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                child: Image.asset('assets/img/logo.png'),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(
-                  vertical: 8.0,
-                ),
-                width: 200,
-                child: RaisedButton(
-                  onPressed: () => _createRoom(),
-                  child: Text(
-                    'CREAR CUARTO',
-                    style: TextStyle(
-                      color: Colors.white,
+      body: Stack(
+        children: [
+          _lobbyProvider.hasError
+              ? Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
+                  color: Colors.grey[850],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _lobbyProvider.errorMsg,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 32),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            _lobbyProvider.dismissError();
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              : Container(),
+          Center(
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    child: Image.asset('assets/img/logo.png'),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 8.0,
+                    ),
+                    width: 200,
+                    child: RaisedButton(
+                      onPressed: () => _createRoom(),
+                      child: Text(
+                        'CREAR CUARTO',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Container(
-                width: 200,
-                child: RaisedButton(
-                  onPressed: () => _joinRoom(),
-                  child: Text(
-                    'UNIRSE A CUARTO',
-                    style: TextStyle(
-                      color: Colors.white,
+                  Container(
+                    width: 200,
+                    child: RaisedButton(
+                      onPressed: () => _joinRoom(),
+                      child: Text(
+                        'UNIRSE A CUARTO',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(
-                  vertical: 8.0,
-                ),
-                width: 200,
-                child: RaisedButton(
-                  child: Text(
-                    'INSTRUCCIONES',
-                    style: TextStyle(
-                      color: Colors.white,
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 8.0,
+                    ),
+                    width: 200,
+                    child: RaisedButton(
+                      child: Text(
+                        'INSTRUCCIONES',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SecondRoute()),
+                        );
+                      },
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SecondRoute()),
-                    );
-                  },
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
 
@@ -257,20 +293,20 @@ class SecondRoute extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: Text(
-                  'El juego se desarrolla mientras haya cartas disponibles.' + 
-                  'Cuando un round comienza todos los jugadores deben elegir' + 
-                  '1 carta de la baraja que les tocó, la carta seleccionada' + 
-                  'permanecerá con el jugador escondida, cuando todos los' + 
-                  'jugadores hayan tomado su decisión se continuará el juego' + 
-                  '(si no te gusta lo elegiste vuelve a presionar la carta' + 
-                  'elegida para elegir otra pero hazlo antes de guardar), el' + 
-                  'resto de la baraja volverán a ser repartidas y el siguiente' + 
-                  'round vas a recibir una nueva baraja. Ahora recuerda que' + 
-                  'debes elegir tus cartas con sabiduría porque si quieres ganar' + 
-                  'en este juego deberás hacer más puntos que los demás, ¿pero' + 
-                  'cómo hago más puntos que los demás? La forma de sumar punto es' + 
-                  'realizando combinaciones exitosas con las cartas que vamos' + 
-                  'eligiendo, esas combinaciones son las siguientes: ',
+                  'El juego se desarrolla mientras haya cartas disponibles.' +
+                      'Cuando un round comienza todos los jugadores deben elegir' +
+                      '1 carta de la baraja que les tocó, la carta seleccionada' +
+                      'permanecerá con el jugador escondida, cuando todos los' +
+                      'jugadores hayan tomado su decisión se continuará el juego' +
+                      '(si no te gusta lo elegiste vuelve a presionar la carta' +
+                      'elegida para elegir otra pero hazlo antes de guardar), el' +
+                      'resto de la baraja volverán a ser repartidas y el siguiente' +
+                      'round vas a recibir una nueva baraja. Ahora recuerda que' +
+                      'debes elegir tus cartas con sabiduría porque si quieres ganar' +
+                      'en este juego deberás hacer más puntos que los demás, ¿pero' +
+                      'cómo hago más puntos que los demás? La forma de sumar punto es' +
+                      'realizando combinaciones exitosas con las cartas que vamos' +
+                      'eligiendo, esas combinaciones son las siguientes: ',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 23,

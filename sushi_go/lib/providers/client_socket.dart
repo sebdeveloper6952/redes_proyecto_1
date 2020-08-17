@@ -149,6 +149,8 @@ class ClientSocket {
         LobbyProvider().notifyPlayerLeftRoom();
         GameManager().notifyPlayerLeftRoom();
         ChatProvider().resetMessages();
+      } else if (serverMessage.type >= SERVER_JOIN_ROOM_ERROR) {
+        LobbyProvider().notifyJoinRoomError();
       } else if (serverMessage.type >= 400) {
         /// error general
         print('error ${serverMessage.type}');
