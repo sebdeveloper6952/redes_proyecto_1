@@ -6,6 +6,13 @@ Integrantes
 - Sebastián Arriola
 
 ### Juego Elegido: SushiGo
+- De 2 a 5 jugadores.
+- Es un juego inspirado en los restaurantes Japoneses en los cuales la comida pasa por una banda rotatoria, y las personas van agarrando los platillos que deseen. SushiGo toma ese concepto y lo plasma en un divertido juego de cartas en el cual los jugadores deben armar combinaciones de platillos para obtener puntos y vencer a sus oponentes. Es un juego con reglas muy sencillas, de duración corta, pero que sin duda entretiene.
+
+### Principales Dificultades
+### Lecciones Aprendidas
+- Cuando se desarrolla una aplicación en la cual existe comunicación entre varias instancias de dicha aplicación, es de suma importancia definir de antemano el protocolo con el cual se comunicarán dichas instancias. Esto asegura que todas las partes saben que "idioma" hablar para que las demás partes los comprendan.
+- El protocolo de comunicación debe ser abstracto, alejado de cualquier detalle de implementación y únicamente definir el "idioma" que se hablará en una aplicación.
 
 # Instalación
 #### Servidor
