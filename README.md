@@ -13,10 +13,12 @@ Integrantes
 ### Principales Dificultades
 - Una de las principales dificultades, fue desarrollar la representación correcta de la información dentro del sistema. De manera que esta fuera fácil de manejar, y entender.
 - Además fue un reto ir delimitando las acciones que tenían que tener una solicitud asociadas a ellas. En lugar de algo que solo se encargará el sistema.
+- ya que para algunos mientros del grupo la tacnologia de flutter era nueva, mientras se realizaba el proyecto se tubo que aprender a usar tambien. 
 ### Lecciones Aprendidas
 - Cuando se desarrolla una aplicación en la cual existe comunicación entre varias instancias de dicha aplicación, es de suma importancia definir de antemano el protocolo con el cual se comunicarán dichas instancias. Esto asegura que todas las partes saben que "idioma" hablar para que las demás partes los comprendan.
 - El protocolo de comunicación debe ser abstracto, alejado de cualquier detalle de implementación y únicamente definir el "idioma" que se hablará en una aplicación.
 - Se implemento el uso de un multiplexor en el proyecto, por lo que entender su funcionalidad.  
+- La logica que se tiene que seguir para poder crear una aplicacion multijugador online. 
 
 # Instalación
 #### Servidor
