@@ -245,6 +245,8 @@ class GameManager extends ChangeNotifier {
     _resetState();
     notifyListeners();
   }
+
+  String getCardImageName(int cardId) => _imgMap[cardId];
 }
 
 class ClientCardsRequest extends ClientMessage {

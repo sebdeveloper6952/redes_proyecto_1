@@ -50,7 +50,9 @@ class ResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final results = context.watch<GameManager>().gameResults;
+    final gameManager = context.watch<GameManager>();
+    final results = gameManager.gameResults;
+    final ids = [1, 2, 3, 4, 7, 8, 9, 10];
 
     final List<Widget> resultsWidget = [];
     resultsWidget.add(
@@ -106,11 +108,27 @@ class ResultsScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: resultsWidget,
-        ),
+      body: Stack(
+        children: [
+          GridView.count(
+            crossAxisCount: 4,
+            children: ids
+                .map(
+                  (id) => Container(
+                    child: Image.asset(
+                      'assets/img/${gameManager.getCardImageName(id)}',
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: resultsWidget,
+            ),
+          ),
+        ],
       ),
     );
   }
