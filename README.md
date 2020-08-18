@@ -1,9 +1,9 @@
 # UVG - Redes - Proyecto 1 BSD Sockets
 ## Juego de Cartas
 Integrantes
-- Alexander Trujillo
-- Paul Belches
-- Sebastián Arriola
+- Alexander Trujillo 17189
+- Paul Belches 17088
+- Sebastián Arriola 11463
 
 ### Juego Elegido: SushiGo
 - De 2 a 5 jugadores.
@@ -21,7 +21,7 @@ Integrantes
 - Se implemento el uso de un multiplexor en el proyecto, por lo que entender su funcionalidad.  
 - La logica que se tiene que seguir para poder crear una aplicacion multijugador online. 
 
-# Instalación y Ejecución
+# Instalación (Requerimientos) y Ejecución
 - Nota: a continuación se detallan las reglas para ejecutar el proyecto local.
 - Se debe ejecutar primero el servidor.
 - Luego, se pueden crear varias ventanas del cliente, al menos 2, para poder iniciar un juego.
