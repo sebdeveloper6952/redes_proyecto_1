@@ -1,4 +1,4 @@
-# UVG - Redes - Proyecto 1
+# UVG - Redes - Proyecto 1 BSD Sockets
 ## Juego de Cartas
 Integrantes
 - Alexander Trujillo
@@ -8,7 +8,8 @@ Integrantes
 ### Juego Elegido: SushiGo
 - De 2 a 5 jugadores.
 - Es un juego inspirado en los restaurantes japoneses en los cuales la comida pasa por una banda rotatoria, y las personas van agarrando los platillos que deseen. SushiGo toma ese concepto y lo plasma en un divertido juego de cartas en el cual los jugadores deben formar combinaciones de platillos para obtener puntos y vencer a sus oponentes. Es un juego con reglas muy sencillas, de duración corta, pero que sin duda entretiene.
-- Video: https://youtu.be/vkR9rx3SxZc
+- Video demo de grupo: https://youtu.be/vkR9rx3SxZc
+- Video de explicación de reglas (ver a partir de minuto 18:45): https://youtu.be/Xu9RB-N4T3g?t=1120
 
 ### Principales Dificultades
 - Una de las principales dificultades, fue desarrollar la representación correcta de la información dentro del sistema. De manera que esta fuera fácil de manejar, y entender.
@@ -20,7 +21,11 @@ Integrantes
 - Se implemento el uso de un multiplexor en el proyecto, por lo que entender su funcionalidad.  
 - La logica que se tiene que seguir para poder crear una aplicacion multijugador online. 
 
-# Instalación
+# Instalación y Ejecución
+- Nota: a continuación se detallan las reglas para ejecutar el proyecto local.
+- Se debe ejecutar primero el servidor.
+- Luego, se pueden crear varias ventanas del cliente, al menos 2, para poder iniciar un juego.
+- Si se desea ejecutar en la nube, por favor contactarnos y pondremos a correr el servidor en la nube.
 #### Servidor
 - python >= 3.6.9
 - numpy >= 1.19.1
@@ -41,6 +46,7 @@ cd build/linux/release/bundle
 ./sushi_go
 ```
 # Protocolo
+- Se utilizaron sockets BSD del lado del servidor y del lado del cliente.
 - se basa en transmisión de mensajes en formato JSON
 - a continuación se detallan todos los mensajes del protocolo
 #### Mensaje 101
