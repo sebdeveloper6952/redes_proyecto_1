@@ -7,13 +7,16 @@ Integrantes
 
 ### Juego Elegido: SushiGo
 - De 2 a 5 jugadores.
-- Es un juego inspirado en los restaurantes Japoneses en los cuales la comida pasa por una banda rotatoria, y las personas van agarrando los platillos que deseen. SushiGo toma ese concepto y lo plasma en un divertido juego de cartas en el cual los jugadores deben armar combinaciones de platillos para obtener puntos y vencer a sus oponentes. Es un juego con reglas muy sencillas, de duración corta, pero que sin duda entretiene.
+- Es un juego inspirado en los restaurantes japoneses en los cuales la comida pasa por una banda rotatoria, y las personas van agarrando los platillos que deseen. SushiGo toma ese concepto y lo plasma en un divertido juego de cartas en el cual los jugadores deben formar combinaciones de platillos para obtener puntos y vencer a sus oponentes. Es un juego con reglas muy sencillas, de duración corta, pero que sin duda entretiene.
 - Video: https://youtu.be/vkR9rx3SxZc
 
 ### Principales Dificultades
+- Una de las principales dificultades, fue desarrollar la representación correcta de la información dentro del sistema. De manera que esta fuera fácil de manejar, y entender.
+- Además fue un reto ir delimitando las acciones que tenían que tener una solicitud asociadas a ellas. En lugar de algo que solo se encargará el sistema.
 ### Lecciones Aprendidas
 - Cuando se desarrolla una aplicación en la cual existe comunicación entre varias instancias de dicha aplicación, es de suma importancia definir de antemano el protocolo con el cual se comunicarán dichas instancias. Esto asegura que todas las partes saben que "idioma" hablar para que las demás partes los comprendan.
 - El protocolo de comunicación debe ser abstracto, alejado de cualquier detalle de implementación y únicamente definir el "idioma" que se hablará en una aplicación.
+- Se implemento el uso de un multiplexor en el proyecto, por lo que entender su funcionalidad.  
 
 # Instalación
 #### Servidor
@@ -58,7 +61,7 @@ cd build/linux/release/bundle
 ```
 #### Mensaje 402
 - flujo: Servidor a Cliente.
-- descripción: Se envia para indicar que hubo un error en el login.
+- descripción: Se envía para indicar que hubo un error en el login.
 ```json
 {
   "type": 402
@@ -85,7 +88,7 @@ cd build/linux/release/bundle
 ```
 #### Mensaje 405
 - flujo: Servidor a Cliente.
-- descripción: Se envia para indicar que hubo un error al crear un cuarto.
+- descripción: Se envía para indicar que hubo un error al crear un cuarto.
 ```json
 {
   "type": 405,
@@ -115,7 +118,7 @@ cd build/linux/release/bundle
 
 #### Mensaje 407
 - flujo: Servidor a Cliente.
-- descripción: Se envia para indicar que hubo un error al unirse a cuarto.
+- descripción: Se envía para indicar que hubo un error al unirse al cuarto.
 ```json
 {
   "type": 407
@@ -144,7 +147,7 @@ cd build/linux/release/bundle
 
 #### Mensaje 409
 - flujo: Servidor a Cliente.
-- descripción: Se envia para indicar que hubo un error al iniciar el juego.
+- descripción: Se envía para indicar que hubo un error al iniciar el juego.
 ```json
 {
   "type": 409
@@ -164,7 +167,7 @@ cd build/linux/release/bundle
 
 #### Mensaje 111
 - flujo: Servidor a Cliente.
-- descripción: Se envía mazo de cartas a jugador.
+- descripción: Se envía mazo de cartas al jugador.
 ```json
 {
   "type": 111,
@@ -186,7 +189,7 @@ cd build/linux/release/bundle
 
 #### Mensaje 412
 - flujo: Servidor a Cliente.
-- descripción: Se envia para indicar que hubo un error al recibir cartas de un jugador.
+- descripción: Se envía para indicar que hubo un error al recibir cartas de un jugador.
 ```json
 {
   "type": 412
@@ -221,7 +224,7 @@ cd build/linux/release/bundle
 
 #### Mensaje 414
 - flujo: Servidor a Cliente.
-- descripción: Se envía a todos los jugadores de un cuarto para indicar que hubo un error en el calculo de puntos.
+- descripción: Se envía a todos los jugadores de un cuarto para indicar que hubo un error en el cálculo de puntos.
 ```json
 {
   "type": 414
@@ -254,7 +257,7 @@ cd build/linux/release/bundle
 
 #### Mensaje 500
 - flujo: Servidor a Cliente.
-- descripción: Se envia para indicar que hubo un error al enviar un mensaje.
+- descripción: Se envía para indicar que hubo un error al envíar un mensaje.
 ```json
 {
   "type": 500
@@ -274,7 +277,7 @@ cd build/linux/release/bundle
 ```
 #### Mensaje 202
 - flujo: Cliente a Servidor.
-- descripción: Jugador se sale de su cuarto de juego.
+- descripción: El jugador sale de su cuarto de juego.
 ```json
 {
   "type": 202,
@@ -293,7 +296,7 @@ cd build/linux/release/bundle
 
 #### Mensaje 503
 - flujo: Servidor a Cliente.
-- descripción: Se envia para indicar que hubo un error al salir de un cuarto.
+- descripción: Se envía para indicar que hubo un error al salir de un cuarto.
 ```json
 {
   "type": 503
@@ -302,7 +305,7 @@ cd build/linux/release/bundle
 
 #### Mensaje 204
 - flujo: Cliente a Servidor.
-- descripción: Jugador se sale de la aplicación, el servidor elimina todo registro de dicho jugador.
+- descripción: El jugador sale de la aplicación, el servidor elimina todo registro de dicho jugador.
 ```json
 {
   "type": 204,
@@ -311,7 +314,7 @@ cd build/linux/release/bundle
 ```
 #### Mensaje 504
 - flujo: Servidor a Cliente.
-- descripción: Se envia para indicar que hubo un error en la salida de un jugador.
+- descripción: Se envía para indicar que hubo un error en la salida de un jugador.
 ```json
 {
   "type": 504
